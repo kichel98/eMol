@@ -36,9 +36,6 @@ public class eMol {
             publisherMainWindow = new PublisherMainWindow(this, frame);
             supportMainWindow = new SupportMainWindow(this, frame);
 
-            //marazie recznie wpisywane
-            user.type = "Support";
-
         }
 
         @Override
@@ -46,11 +43,18 @@ public class eMol {
             String command = e.getActionCommand();
 
             if( command.equals( "Log In" ))  {
-               System.out.println("Logging to the system...");
-               database.connect();
-               if(user.type.equals("Customer")) presentBooksWindow.display();
-               else if(user.type.equals("Publisher")) publisherMainWindow.display();
-               else if(user.type.equals("Support")) supportMainWindow.display();
+                System.out.println("Logging to the system...");
+                Input input = loginWindow.getInput();
+
+                //Do debugowania - żeby szybciej logowanie szło
+                //user = database.connect(input.username, input.password);
+                user = database.connect("publisher", "1234");
+                //user = database.connect("customer", "1234");
+                //user = database.connect("support", "1234");
+
+                if(user.type.equals("Customer")) presentBooksWindow.display();
+                else if(user.type.equals("Publisher")) publisherMainWindow.display();
+                else if(user.type.equals("Support")) supportMainWindow.display();
 
             } else if (command.equals( "Logout" )) {
                 System.out.println("Logging out of the system...");

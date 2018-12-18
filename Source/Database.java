@@ -1,7 +1,34 @@
-public class Database {
-    public void connect()
-    {
+import java.sql.*;
 
+public class Database {
+    Connection connection;
+    Statement statement;
+
+    public User connect(String username, String password)
+    {
+        String port = "3306";
+        String IP = "localhost";
+        String databaseName = "emol";
+
+        String timezone = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+
+        String query = "SELECT Users.id, UserType.userType FROM Users JOIN UserType " +
+                "ON Users.userType=UserType.id WHERE username='"+username+"' AND password='"+password+"'";
+
+        User user = new User();
+
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://" + IP + ":" + port + "/" + databaseName+timezone,
+                    username, password);
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            resultSet.next();
+            user.ID = resultSet.getInt("id");
+            user.type = resultSet.getString("userType");
+        }
+        catch (SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+
+        return user;
     }
 
     //Customer

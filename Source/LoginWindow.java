@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 public class LoginWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
-    //private GameInfo gameInfo = new GameInfo();
 
     private JTextField loginTextField = new JTextField();
     private JTextField passwordTextField = new JTextField();
@@ -73,18 +72,12 @@ public class LoginWindow {
 
     }
 
-    /*
-    GameInfo getGameInfo()
+    Input getInput()
     {
-        System.out.print(gameNameTextField.getText()+"\n");
-        gameInfo.name = gameNameTextField.getText();
-        gameInfo.maxNumberOfPlayers = Integer.parseInt(numberOfPlayersTextField.getText());
-        System.out.print(numberOfBotsTextField.getText()+"\n");
-        String numberOfBotsString = numberOfBotsTextField.getText();
-        int numberOfBots = Integer.parseInt(numberOfBotsString);
-        gameInfo.numberOfBots = numberOfBots;
-        System.out.print("Name: "+gameInfo.name+" #Bots: "+ numberOfBots+"\n");
-        return gameInfo;
+        Input input = new Input();
+        input.username = loginTextField.getText();
+        input.password = passwordTextField.getText();
+        return input;
     }
-    */
+
 }
