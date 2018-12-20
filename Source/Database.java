@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     Connection connection;
@@ -12,9 +13,10 @@ public class Database {
 
         String timezone = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
-        String query = "SELECT Users.id, UserType.userType FROM Users JOIN UserType " +
-                "ON Users.userType=UserType.id WHERE username='"+username+"' AND password='"+password+"'";
+        String query = "SELECT user.id, user_type.name FROM user JOIN user_type " +
+                "ON user.user_type_id=user_type.id WHERE username='"+username+"' AND password='"+password+"'";
 
+        System.out.println("QUERY: "+query);
         User user = new User();
 
         try {
@@ -24,7 +26,7 @@ public class Database {
             ResultSet resultSet = statement.executeQuery(query);
             resultSet.next();
             user.ID = resultSet.getInt("id");
-            user.type = resultSet.getString("userType");
+            user.type = resultSet.getString("name");
         }
         catch (SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
 
@@ -32,10 +34,34 @@ public class Database {
     }
 
     //Customer
-    public void downloadBooks(String keyword, boolean eBook, boolean pBack, boolean aBook,
-                              int priceHigherThan, int priceLowerThan, SortType sortType, int page)
+    public ArrayList<Book> downloadBooks(String keyword, boolean eBook, boolean pBack, boolean aBook,
+                                         int priceHigherThan, int priceLowerThan, SortType sortType, int page)
     {
+        String query = "SELECT title, subtitle, isbn, price FROM book ";
+        if(eBook) query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
+        if(pBack) query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
+        if(aBook) query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
+        query += "WHERE ";
+        query += "title LIKE '%" + keyword + "%' AND ";
+        query+= "price>"+priceHigherThan + " AND price<" + priceLowerThan + " ";
+        query+= "ORDER BY price " + sortType.toString()+" ";
+        query+= "LIMIT 10";
 
+        System.out.println("QUERY: "+query);
+
+        ArrayList<Book> bookData = new ArrayList<Book>();
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next())
+            {
+                bookData.add(new Book(resultSet.getString("title"),
+                        resultSet.getString("subtitle"),
+                        resultSet.getString("isbn"),
+                        resultSet.getDouble("price")));
+            }
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        return bookData;
     }
     public void downloadBookTypes()
     {

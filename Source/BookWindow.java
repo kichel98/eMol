@@ -6,6 +6,7 @@ public class BookWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
     private JTextField amountTextField = new JTextField();
+    Book book;
 
     BookWindow(ActionListener actionListener, JFrame frame)
     {
@@ -20,13 +21,13 @@ public class BookWindow {
 
         System.out.println("Drawing the LoginWindow...");
 
-        JLabel titleLabel = new JLabel("Title");
+        JLabel titleLabel = new JLabel(book.title);
         titleLabel.setBackground(Color.BLACK);
         titleLabel.setForeground(Color.white);
         titleLabel.setOpaque(true);
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        JLabel subtitleLabel = new JLabel("Subtitle");
+        JLabel subtitleLabel = new JLabel(book.subtitle);
         subtitleLabel.setBackground(Color.BLACK);
         subtitleLabel.setForeground(Color.white);
         subtitleLabel.setOpaque(true);

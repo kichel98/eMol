@@ -1,11 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class PresentBooksWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
-    //private GameInfo gameInfo = new GameInfo();
+    ArrayList<Book> books = new ArrayList<Book>();
 
     private JTextField searchBarTextField = new JTextField();
 
@@ -21,6 +22,10 @@ public class PresentBooksWindow {
         mainFrame.setLayout(new GridBagLayout());
 
         System.out.println("Drawing the PresentBooksWindow...");
+        for(int i=0; i<books.size(); i++)
+        {
+            System.out.println("ISBN: "+books.get(i).isbn+ " Title: "+books.get(i).title);
+        }
 
         JLabel loginLabel = new JLabel("Login");
         loginLabel.setBackground(Color.BLACK);
@@ -40,16 +45,32 @@ public class PresentBooksWindow {
         loginBTN.setBackground(Color.BLACK);
         loginBTN.setForeground(Color.white);
 
+        //Creating the search bar
+        JPanel searchBarPanel = new JPanel(new GridLayout(1, 2, 0, 1));
+        searchBarPanel.setBounds(0,0,500 ,50);
+        searchBarPanel.setPreferredSize(new Dimension(700, 50));
+        searchBarPanel.setBackground(Color.DARK_GRAY);
+
+        JButton searchBTN = new JButton("Search");
+        searchBTN.addActionListener(actionListener);
+        searchBTN.setBackground(Color.BLACK);
+        searchBTN.setForeground(Color.white);
+
+
         //Creating the Center Panel
         JPanel panel = new JPanel(new GridLayout(11, 1, 20, 1));
         panel.setBounds(0,0,500 ,800);
         panel.setPreferredSize(new Dimension(700, 750));
         panel.setBackground(Color.DARK_GRAY);
 
-        panel.add(searchBarTextField);
-        for(int i=0; i<9; i++)
+        searchBarPanel.add(searchBarTextField);
+        searchBarPanel.add(searchBTN);
+        panel.add(searchBarPanel);
+
+        for(int i=0; i<books.size(); i++)
         {
-            JButton bookBTN = new JButton("Book"+i);
+            JButton bookBTN = new JButton("Book"+i+": "+books.get(i).title+": "+
+                    books.get(i).subtitle+" Price: "+books.get(i).price);
             bookBTN.addActionListener(actionListener);
             bookBTN.setBackground(Color.BLACK);
             bookBTN.setForeground(Color.white);
@@ -75,5 +96,12 @@ public class PresentBooksWindow {
         mainFrame.repaint();
         mainFrame.setVisible(true);
 
+    }
+
+    SearchData getSearchData()
+    {
+        SearchData searchData = new SearchData();
+        searchData.keyword = searchBarTextField.getText();
+        return searchData;
     }
 }

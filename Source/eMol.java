@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class eMol {
@@ -48,8 +49,8 @@ public class eMol {
 
                 //Do debugowania - żeby szybciej logowanie szło
                 //user = database.connect(input.username, input.password);
-                user = database.connect("publisher", "1234");
-                //user = database.connect("customer", "1234");
+                //user = database.connect("publisher", "1234");
+                user = database.connect("customer", "1234");
                 //user = database.connect("support", "1234");
 
                 if(user.type.equals("Customer")) presentBooksWindow.display();
@@ -67,7 +68,21 @@ public class eMol {
             } else if( command.startsWith( "Book" ) )  {
                 int i = new Scanner(command).useDelimiter("\\D+").nextInt();
                 System.out.println("Showing book details");
-                if(user.type.equals("Customer")) bookWindow.display();
+                if(user.type.equals("Customer")) {
+                    bookWindow.book = presentBooksWindow.books.get(i);
+                    bookWindow.display();
+                }
+
+            } else if( command.startsWith( "Search" ) )  {
+                System.out.println("Presenting books...");
+                if(user.type.equals("Customer")) {
+                    SearchData searchData = presentBooksWindow.getSearchData();
+                    presentBooksWindow.books = database.downloadBooks(searchData.keyword,
+                            true, true, true,
+                            0,  999999, SortType.ASC, 1);
+                    presentBooksWindow.display();
+                }
+
 
             } else if( command.startsWith( "Exit" ) )  {
                 System.out.println("Exiting...");
