@@ -70,7 +70,7 @@ public class PresentBooksWindow {
         for(int i=0; i<books.size(); i++)
         {
             JButton bookBTN = new JButton("Book"+i+": "+books.get(i).title+": "+
-                    books.get(i).subtitle+" Price: "+books.get(i).price);
+                    books.get(i).subtitle+" Price: "+books.get(i).price + " Type: "+ books.get(i).type);
             bookBTN.addActionListener(actionListener);
             bookBTN.setBackground(Color.BLACK);
             bookBTN.setForeground(Color.white);

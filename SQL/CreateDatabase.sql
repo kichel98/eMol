@@ -43,6 +43,7 @@ author VARCHAR(60),
 price DOUBLE,
 publisher_id INT UNSIGNED,
 date DATE,
+type VARCHAR(60) NOT NULL,
 language_id INT UNSIGNED,
 PRIMARY KEY(id),
 FOREIGN KEY(publisher_id) REFERENCES publisher(id),
@@ -106,10 +107,3 @@ PRIMARY KEY(id),
 FOREIGN KEY(book_id) REFERENCES book(id),
 FOREIGN KEY(customer_id) REFERENCES customer(user_id)
 );
-
-
-
-
-
-
-

@@ -37,12 +37,40 @@ public class Database {
     public ArrayList<Book> downloadBooks(String keyword, boolean eBook, boolean pBack, boolean aBook,
                                          int priceHigherThan, int priceLowerThan, SortType sortType, int page)
     {
-        String query = "SELECT title, subtitle, isbn, price FROM book ";
+        int amountOfTypes = 0;
+        if(!eBook && !pBack && aBook) amountOfTypes=1;
+        if(!eBook && pBack && !aBook) amountOfTypes=1;
+        if(eBook && !pBack && !aBook) amountOfTypes=1;
+        if(eBook && pBack && !aBook) amountOfTypes=2;
+        if(eBook && !pBack && aBook) amountOfTypes=2;
+        if(!eBook && pBack && aBook) amountOfTypes=2;
+        if(eBook && pBack && aBook) amountOfTypes=3;
+
+        String query = "SELECT title, subtitle, isbn, price, type FROM book ";
         if(eBook) query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
         if(pBack) query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         if(aBook) query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
         query += "WHERE ";
         query += "title LIKE '%" + keyword + "%' AND ";
+        if(amountOfTypes==3) query+= "( type='ebook' OR type='paperback' OR type='audiobook' )";
+        else if(amountOfTypes==2)
+        {
+
+            if(eBook) query+= "( type='ebook' OR";
+            if(pBack) query+= "( type='paperback' OR";
+            if(aBook) query+= "( type='audiobook' OR";
+            if(aBook) query+= " type='ebook' )";
+            if(pBack) query+= " type='paperback' )";
+            if(aBook) query+= " type='audiobook' )";
+        }
+        else if(amountOfTypes==1)
+        {
+            if(eBook) query+= "type='ebook'";
+            if(pBack) query+= "type='pBack'";
+            if(aBook) query+= "type='audio'";
+        }
+
+        query+= " AND ";
         query+= "price>"+priceHigherThan + " AND price<" + priceLowerThan + " ";
         query+= "ORDER BY price " + sortType.toString()+" ";
         query+= "LIMIT 10";
@@ -57,7 +85,8 @@ public class Database {
                 bookData.add(new Book(resultSet.getString("title"),
                         resultSet.getString("subtitle"),
                         resultSet.getString("isbn"),
-                        resultSet.getDouble("price")));
+                        resultSet.getDouble("price"),
+                        resultSet.getString("type")));
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
