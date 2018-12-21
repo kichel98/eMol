@@ -1,3 +1,7 @@
+package emol.windows;
+
+import emol.Book;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -6,9 +10,9 @@ public class BookWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
     private JTextField amountTextField = new JTextField();
-    Book book;
+    public Book book;
 
-    BookWindow(ActionListener actionListener, JFrame frame)
+    public BookWindow(ActionListener actionListener, JFrame frame)
     {
         this.actionListener = actionListener;
         this.mainFrame = frame;
@@ -19,7 +23,7 @@ public class BookWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the LoginWindow...");
+        System.out.println("Drawing the emol.windows.LoginWindow...");
 
         JLabel titleLabel = new JLabel(book.title);
         titleLabel.setBackground(Color.BLACK);

@@ -1,9 +1,11 @@
+package emol;
+
 public class Book {
-    String title;
-    String subtitle;
-    String isbn;
-    double price;
-    String type;
+    public String title;
+    public String subtitle;
+    public String isbn;
+    public double price;
+    public String type;
 
     Book(String title, String subtitle,  String isbn, double price, String type){
         this.title = title;

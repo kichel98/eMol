@@ -1,3 +1,5 @@
+package emol.windows;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -9,7 +11,7 @@ public class LoginWindow {
     private JTextField loginTextField = new JTextField();
     private JTextField passwordTextField = new JTextField();
 
-    LoginWindow(ActionListener actionListener, JFrame frame)
+    public LoginWindow(ActionListener actionListener, JFrame frame)
     {
         this.actionListener = actionListener;
         this.mainFrame = frame;
@@ -20,7 +22,7 @@ public class LoginWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the LoginWindow...");
+        System.out.println("Drawing the emol.windows.LoginWindow...");
 
         JLabel loginLabel = new JLabel("Login");
         loginLabel.setBackground(Color.BLACK);
@@ -72,12 +74,12 @@ public class LoginWindow {
 
     }
 
-    Input getInput()
+    public KeyboardInput getInput()
     {
-        Input input = new Input();
-        input.username = loginTextField.getText();
-        input.password = passwordTextField.getText();
-        return input;
+        KeyboardInput keyboardInput = new KeyboardInput();
+        keyboardInput.username = loginTextField.getText();
+        keyboardInput.password = passwordTextField.getText();
+        return keyboardInput;
     }
 
 }

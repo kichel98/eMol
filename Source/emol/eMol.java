@@ -1,7 +1,11 @@
+package emol;
+
+import emol.enums.SortType;
+import emol.windows.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class eMol {
@@ -45,10 +49,10 @@ public class eMol {
 
             if( command.equals( "Log In" ))  {
                 System.out.println("Logging to the system...");
-                Input input = loginWindow.getInput();
+                KeyboardInput keyboardInput = loginWindow.getInput();
 
                 //Do debugowania - żeby szybciej logowanie szło
-                //user = database.connect(input.username, input.password);
+                //user = database.connect(keyboardInput.username, keyboardInput.password);
                 //user = database.connect("publisher", "1234");
                 user = database.connect("customer", "1234");
                 //user = database.connect("support", "1234");
@@ -62,7 +66,7 @@ public class eMol {
                 loginWindow.display();
 
             } else if (command.equals( "Back" )) {
-                System.out.println("Going back to the PresentBooksWindow...");
+                System.out.println("Going back to the emol.windows.PresentBooksWindow...");
                 presentBooksWindow.display();
 
             } else if( command.startsWith( "Book" ) )  {
@@ -76,8 +80,8 @@ public class eMol {
             } else if( command.startsWith( "Search" ) )  {
                 System.out.println("Presenting books...");
                 if(user.type.equals("Customer")) {
-                    SearchData searchData = presentBooksWindow.getSearchData();
-                    presentBooksWindow.books = database.downloadBooks(searchData.keyword,
+                    KeyboardInput keyboardInput = presentBooksWindow.getInput();
+                    presentBooksWindow.books = database.downloadBooks(keyboardInput.keyword,
                             true, true, true,
                             0,  999999, SortType.ASC, 1);
                     presentBooksWindow.display();

@@ -1,3 +1,7 @@
+package emol.windows;
+
+import emol.Book;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -6,11 +10,11 @@ import java.util.ArrayList;
 public class PresentBooksWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
-    ArrayList<Book> books = new ArrayList<Book>();
+    public ArrayList<Book> books = new ArrayList<Book>();
 
     private JTextField searchBarTextField = new JTextField();
 
-    PresentBooksWindow(ActionListener actionListener, JFrame frame)
+    public PresentBooksWindow(ActionListener actionListener, JFrame frame)
     {
         this.actionListener = actionListener;
         this.mainFrame = frame;
@@ -21,7 +25,7 @@ public class PresentBooksWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the PresentBooksWindow...");
+        System.out.println("Drawing the emol.windows.PresentBooksWindow...");
         for(int i=0; i<books.size(); i++)
         {
             System.out.println("ISBN: "+books.get(i).isbn+ " Title: "+books.get(i).title);
@@ -83,7 +87,6 @@ public class PresentBooksWindow {
         backBTN.setForeground(Color.white);
         panel.add(backBTN);
 
-
         //Creating the main (full) window
         JPanel main = new JPanel();
         main.setBounds(0,0,1000,800);
@@ -98,10 +101,10 @@ public class PresentBooksWindow {
 
     }
 
-    SearchData getSearchData()
+    public KeyboardInput getInput()
     {
-        SearchData searchData = new SearchData();
-        searchData.keyword = searchBarTextField.getText();
-        return searchData;
+        KeyboardInput keyboardInput = new KeyboardInput();
+        keyboardInput.keyword = searchBarTextField.getText();
+        return keyboardInput;
     }
 }

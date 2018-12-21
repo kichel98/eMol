@@ -1,6 +1,6 @@
-DROP DATABASE eMol;
-CREATE DATABASE eMol;
-USE eMol;
+DROP DATABASE emol.eMol;
+CREATE DATABASE emol.eMol;
+USE emol.eMol;
 
 CREATE TABLE user_type(
 id INT UNSIGNED AUTO_INCREMENT,
@@ -16,6 +16,17 @@ id INT UNSIGNED AUTO_INCREMENT,
 name VARCHAR(20),
 PRIMARY KEY(id)
 );
+
+CREATE TABLE book_type(
+id INT UNSIGNED AUTO_INCREMENT,
+name VARCHAR(20),
+PRIMARY KEY(id)
+);
+INSERT INTO book_type (name) VALUES("ebook");
+INSERT INTO book_type (name) VALUES("paperback");
+INSERT INTO book_type (name) VALUES("audiobook");
+
+
 
 CREATE TABLE publisher(
 id INT UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -35,7 +46,7 @@ FOREIGN KEY(user_type_id) REFERENCES user_type(id)
 
 CREATE TABLE book(
 id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-isbn VARCHAR(60),
+isbn VARCHAR(60) UNIQUE,
 title VARCHAR(60),
 subtitle VARCHAR(60),
 description VARCHAR(60),

@@ -1,3 +1,5 @@
+package emol.windows;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -10,7 +12,7 @@ public class SupportMainWindow {
     private JTextField deleteBookTextField = new JTextField();
     private JTextField deleteReviewTextField = new JTextField();
 
-    SupportMainWindow(ActionListener actionListener, JFrame frame)
+    public SupportMainWindow(ActionListener actionListener, JFrame frame)
     {
         this.actionListener = actionListener;
         this.mainFrame = frame;
@@ -21,10 +23,10 @@ public class SupportMainWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the SupportMainWindow...");
+        System.out.println("Drawing the emol.windows.SupportMainWindow...");
 
         //Creating the Login Button
-        JButton deleteBookBTN = new JButton("Delete Book");
+        JButton deleteBookBTN = new JButton("Delete emol.Book");
         deleteBookBTN.addActionListener(actionListener);
         deleteBookBTN.setBackground(Color.BLACK);
         deleteBookBTN.setForeground(Color.white);

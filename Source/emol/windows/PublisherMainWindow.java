@@ -1,3 +1,5 @@
+package emol.windows;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -6,7 +8,7 @@ public class PublisherMainWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
 
-    PublisherMainWindow(ActionListener actionListener, JFrame frame)
+    public PublisherMainWindow(ActionListener actionListener, JFrame frame)
     {
         this.actionListener = actionListener;
         this.mainFrame = frame;
@@ -35,7 +37,7 @@ public class PublisherMainWindow {
 
         for(int i=0; i<5; i++)
         {
-            JButton bookBTN = new JButton("Book"+i);
+            JButton bookBTN = new JButton("emol.Book"+i);
             bookBTN.addActionListener(actionListener);
             bookBTN.setBackground(Color.BLACK);
             bookBTN.setForeground(Color.white);
