@@ -19,7 +19,7 @@ public class PublisherMainWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the PunlisherMainWindow...");
+        System.out.println("Drawing the PublisherMainWindow...");
 
         JLabel salesLabel = new JLabel("Sales: $100");
         salesLabel.setBackground(Color.BLACK);
@@ -37,7 +37,7 @@ public class PublisherMainWindow {
 
         for(int i=0; i<5; i++)
         {
-            JButton bookBTN = new JButton("emol.Book"+i);
+            JButton bookBTN = new JButton("Book"+i);
             bookBTN.addActionListener(actionListener);
             bookBTN.setBackground(Color.BLACK);
             bookBTN.setForeground(Color.white);

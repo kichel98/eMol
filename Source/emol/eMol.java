@@ -66,7 +66,7 @@ public class eMol {
                 loginWindow.display();
 
             } else if (command.equals( "Back" )) {
-                System.out.println("Going back to the emol.windows.PresentBooksWindow...");
+                System.out.println("Going back to the PresentBooksWindow...");
                 presentBooksWindow.display();
 
             } else if( command.startsWith( "Book" ) )  {
@@ -74,6 +74,7 @@ public class eMol {
                 System.out.println("Showing book details");
                 if(user.type.equals("Customer")) {
                     bookWindow.book = presentBooksWindow.books.get(i);
+                    bookWindow.reviews = database.downloadReviews(bookWindow.book.isbn);
                     bookWindow.display();
                 }
 
@@ -84,8 +85,20 @@ public class eMol {
                     presentBooksWindow.books = database.downloadBooks(keyboardInput.keyword,
                             true, true, true,
                             0,  999999, SortType.ASC, 1);
+                    System.out.println("Number of books: "+presentBooksWindow.books.size());
                     presentBooksWindow.display();
                 }
+
+            } else if( command.startsWith( "Leave a Review" ) )  {
+                System.out.println("Leaving a Review...");
+                if(user.type.equals("Customer")) {
+                    KeyboardInput keyboardInput = bookWindow.getInput();
+                    database.leaveReview(bookWindow.book.book_id, keyboardInput.review);
+
+                    bookWindow.reviews = database.downloadReviews(bookWindow.book.isbn);
+                    bookWindow.display();
+                }
+
 
 
             } else if( command.startsWith( "Exit" ) )  {

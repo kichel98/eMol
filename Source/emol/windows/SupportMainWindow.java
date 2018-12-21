@@ -23,10 +23,10 @@ public class SupportMainWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the emol.windows.SupportMainWindow...");
+        System.out.println("Drawing the SupportMainWindow...");
 
         //Creating the Login Button
-        JButton deleteBookBTN = new JButton("Delete emol.Book");
+        JButton deleteBookBTN = new JButton("Delete Book");
         deleteBookBTN.addActionListener(actionListener);
         deleteBookBTN.setBackground(Color.BLACK);
         deleteBookBTN.setForeground(Color.white);

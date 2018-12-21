@@ -22,7 +22,7 @@ public class LoginWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the emol.windows.LoginWindow...");
+        System.out.println("Drawing the LoginWindow...");
 
         JLabel loginLabel = new JLabel("Login");
         loginLabel.setBackground(Color.BLACK);
@@ -50,7 +50,7 @@ public class LoginWindow {
 
         //Creating the Center Panel
         JPanel panel = new JPanel(new GridLayout(6, 1, 20, 1));
-        panel.setPreferredSize(new Dimension(300, 250));
+        panel.setPreferredSize(new Dimension(400, 350));
         panel.setBackground(Color.DARK_GRAY);
 
         panel.add(loginLabel);

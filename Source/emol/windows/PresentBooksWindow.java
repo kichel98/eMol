@@ -25,7 +25,7 @@ public class PresentBooksWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the emol.windows.PresentBooksWindow...");
+        System.out.println("Drawing the PresentBooksWindow...");
         for(int i=0; i<books.size(); i++)
         {
             System.out.println("ISBN: "+books.get(i).isbn+ " Title: "+books.get(i).title);

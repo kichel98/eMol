@@ -6,8 +6,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
-    Connection connection;
-    Statement statement;
+    private Connection connection;
+    private Statement statement;
 
     //connect and login
     public User connect(String username, String password)
@@ -38,7 +38,8 @@ public class Database {
         return user;
     }
 
-    //Customer
+    //Customer-------------------------------------------------------------------------------------
+    //Done
     public ArrayList<Book> downloadBooks(String keyword, boolean eBook, boolean pBack, boolean aBook,
                                          int priceHigherThan, int priceLowerThan, SortType sortType, int page)
     {
@@ -51,7 +52,7 @@ public class Database {
         if(!eBook && pBack && aBook) amountOfTypes=2;
         if(eBook && pBack && aBook) amountOfTypes=3;
 
-        String query = "SELECT title, subtitle, isbn, price, type FROM book ";
+        String query = "SELECT book.id, title, subtitle, isbn, price, type FROM book ";
         if(eBook) query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
         if(pBack) query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         if(aBook) query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
@@ -92,13 +93,15 @@ public class Database {
                         resultSet.getString("subtitle"),
                         resultSet.getString("isbn"),
                         resultSet.getDouble("price"),
-                        resultSet.getString("type")));
+                        resultSet.getString("type"),
+                        resultSet.getInt("id")));
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
         return bookData;
     }
 
+    //Done
     public ArrayList<String> downloadBookTypes()
     {
         ArrayList<String> bookTypes = new ArrayList<String>();
@@ -118,6 +121,7 @@ public class Database {
         return bookTypes;
     }
 
+    //Done
     public ArrayList<String> downloadLanguages()
     {
 
@@ -139,27 +143,69 @@ public class Database {
 
     }
 
-    public void downloadReviews(String ISBN)
+    //Done
+    public ArrayList<Review> downloadReviews(String ISBN)
     {
+        ArrayList<Review> reviews = new ArrayList<Review>();
+        String query = "SELECT review.description, rating FROM review " +
+                "JOIN book ON book.id=review.book_id WHERE book.isbn='" + ISBN + "' LIMIT 10";
 
+        System.out.println("Downloading reviews for a book...");
+        System.out.println(query);
+
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next())
+            {
+                reviews.add(new Review(resultSet.getInt("rating"),
+                        resultSet.getString("description")));
+            }
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        return reviews;
 
     }
 
-    public void checkIfISBNAlreadyExists()
+    //Done - to prevent ISBNs from repeating
+    public boolean checkIfISBNAlreadyExists(String ISBN)
     {
+        String query = "SELECT * FROM book WHERE isbn='" + ISBN + "'";
 
+        System.out.println("Checking if ISBN in the database...");
+        System.out.println(query);
+
+        boolean itDoes = false;
+
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next())
+            {
+                itDoes = true;
+            }
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        return itDoes;
     }
 
     public void buyBook(String ISBN, int amount, int userID)
     {
 
     }
-    public void leaveReview(String ISBN, int stars, String review)
+    public void leaveReview(int book_id, Review review)
     {
+        String query = "INSERT INTO review (book_id, rating, description) VALUES(" +
+                book_id + ", "+ review.rating +", '" + review.description + "')";
 
+        System.out.println("Uploading a review for a book...");
+        System.out.println(query);
+
+        try {
+            statement.executeUpdate(query);
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
 
-    //Publisher
+    //Publisher---------------------------------------------------------------------------------
     public void addEBook(String ISBN, String Title, String subTitle, double price, String author,
                          int publisherID, String language, String date, String Description, int fileSize)
     {
@@ -177,7 +223,7 @@ public class Database {
     }
     public ArrayList<Book> downloadPublishersBooks(int publisherID)
     {
-        String query = "SELECT title, subtitle, isbn, price, type FROM book ";
+        String query = "SELECT book.id, title, subtitle, isbn, price, type FROM book ";
         query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
         query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
@@ -197,7 +243,8 @@ public class Database {
                         resultSet.getString("subtitle"),
                         resultSet.getString("isbn"),
                         resultSet.getDouble("price"),
-                        resultSet.getString("type")));
+                        resultSet.getString("type"),
+                        resultSet.getInt("id")));
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
@@ -213,7 +260,7 @@ public class Database {
 
     }
 
-    //Support
+    //Support------------------------------------------------------------------------------------
     public void deleteBook(String ISBN)
     {
 
