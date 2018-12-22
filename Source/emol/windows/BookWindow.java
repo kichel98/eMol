@@ -88,7 +88,6 @@ public class BookWindow {
         mainPanel.add(bookDetailsPanel);
 
         //Reviews
-
         JLabel reviewslabel = new JLabel("Reviews");
         reviewslabel.setBackground(Color.BLACK);
         reviewslabel.setForeground(Color.white);
@@ -167,7 +166,9 @@ public class BookWindow {
     public KeyboardInput getInput()
     {
         KeyboardInput ki = new KeyboardInput();
-        ki.review = new Review(Integer.parseInt(ratingTextField.getText()), reviewTextField.getText());
+        if(!ratingTextField.getText().isEmpty() && !reviewTextField.getText().isEmpty())
+            ki.review = new Review(Integer.parseInt(ratingTextField.getText()), reviewTextField.getText());
+        if(!amountTextField.getText().isEmpty()) ki.amount = Integer.parseInt(amountTextField.getText());
         return ki;
     }
 }

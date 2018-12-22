@@ -19,3 +19,6 @@ INSERT INTO user (username, password, user_type_id) VALUES("support", "1234", 3)
 INSERT INTO customer (user_id, money) VALUES(2, 100);
 
 
+SELECT * FROM user;
+SELECT * FROM publisher;
+

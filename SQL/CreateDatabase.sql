@@ -1,6 +1,6 @@
-DROP DATABASE emol.eMol;
-CREATE DATABASE emol.eMol;
-USE emol.eMol;
+DROP DATABASE eMol;
+CREATE DATABASE eMol;
+USE eMol;
 
 CREATE TABLE user_type(
 id INT UNSIGNED AUTO_INCREMENT,
@@ -30,6 +30,7 @@ INSERT INTO book_type (name) VALUES("audiobook");
 
 CREATE TABLE publisher(
 id INT UNSIGNED AUTO_INCREMENT NOT NULL,
+user_id INT UNSIGNED,
 name VARCHAR(90),
 royalty DOUBLE,
 PRIMARY KEY(id)
@@ -103,7 +104,7 @@ FOREIGN KEY(book_id) REFERENCES book(id)
 
 CREATE TABLE customer(
 user_id INT UNSIGNED NOT NULL,
-money INT,
+money DOUBLE,
 PRIMARY KEY(user_id),
 FOREIGN KEY(user_id) REFERENCES user(id)
 );

@@ -21,6 +21,8 @@ public class Database {
         String query = "SELECT user.id, user_type.name FROM user JOIN user_type " +
                 "ON user.user_type_id=user_type.id WHERE username='"+username+"' AND password='"+password+"'";
 
+
+
         System.out.println("QUERY: "+query);
         User user = new User();
 
@@ -32,6 +34,13 @@ public class Database {
             resultSet.next();
             user.ID = resultSet.getInt("id");
             user.type = resultSet.getString("name");
+
+            String query2 = "SELECT publisher.id FROM publisher JOIN user ON user.id = publisher.user_id"+
+                    " WHERE publisher.user_id="+user.ID;
+            ResultSet resultSet2 = statement.executeQuery(query2);
+            resultSet2.next();
+            user.publisherID = Integer.parseInt(resultSet2.getString("id"));
+
         }
         catch (SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
 
@@ -52,28 +61,29 @@ public class Database {
         if(!eBook && pBack && aBook) amountOfTypes=2;
         if(eBook && pBack && aBook) amountOfTypes=3;
 
-        String query = "SELECT book.id, title, subtitle, isbn, price, type FROM book ";
+        String query = "SELECT book.id, title, subtitle, isbn, price, book_type.name FROM book ";
         if(eBook) query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
         if(pBack) query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         if(aBook) query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
-        query += "WHERE ";
+        query += "LEFT JOIN book_type ON book.type = book_type.id";
+        query += " WHERE ";
         query += "title LIKE '%" + keyword + "%' AND ";
-        if(amountOfTypes==3) query+= "( type='ebook' OR type='paperback' OR type='audiobook' )";
+        if(amountOfTypes==3) query+= "( book_type.name='ebook' OR book_type.name='paperback' OR book_type.name='audiobook' )";
         else if(amountOfTypes==2)
         {
 
-            if(eBook) query+= "( type='ebook' OR";
-            if(pBack) query+= "( type='paperback' OR";
-            if(aBook) query+= "( type='audiobook' OR";
-            if(aBook) query+= " type='ebook' )";
-            if(pBack) query+= " type='paperback' )";
-            if(aBook) query+= " type='audiobook' )";
+            if(eBook) { query+= "( book_type.name='ebook' OR"; eBook = false;}
+            else if(pBack) { query+= "( book_type.name='paperback' OR"; pBack = false;}
+            else if(aBook) { query+= "( book_type.name='audiobook' OR"; aBook = false;}
+            if(eBook) query+= " book_type.name='ebook' )";
+            else if(pBack) query+= " book_type.name='paperback' )";
+            else if(aBook) query+= " book_type.name='audiobook' )";
         }
         else if(amountOfTypes==1)
         {
-            if(eBook) query+= "type='ebook'";
-            if(pBack) query+= "type='pBack'";
-            if(aBook) query+= "type='audio'";
+            if(eBook) query+= "book_type.name='ebook'";
+            if(pBack) query+= "book_type.name='paperback'";
+            if(aBook) query+= "book_type.name='audiobook'";
         }
 
         query+= " AND ";
@@ -93,7 +103,7 @@ public class Database {
                         resultSet.getString("subtitle"),
                         resultSet.getString("isbn"),
                         resultSet.getDouble("price"),
-                        resultSet.getString("type"),
+                        resultSet.getString("name"),
                         resultSet.getInt("id")));
             }
         }
@@ -187,9 +197,46 @@ public class Database {
         return itDoes;
     }
 
-    public void buyBook(String ISBN, int amount, int userID)
-    {
+    public void buyBook(Book book, int amount, int userID) {
+        try {
+            //Assume a valid connection object conn
+            connection.setAutoCommit(false);
 
+            String query0 = "SELECT publisher.id FROM publisher JOIN book ON publisher.id = book.publisher_id " +
+                    "WHERE book.id='" + book.book_id + "'";
+            System.out.println(query0);
+            ResultSet rs = statement.executeQuery(query0);
+            rs.next();
+            int publisher_id = rs.getInt("id");
+
+            double royalty = amount * book.price;
+
+            String query1 = "UPDATE publisher SET royalty = royalty + " + royalty +
+                    "WHERE publisher.id=" + publisher_id;
+            System.out.println(query1);
+            statement.executeUpdate(query1);
+
+            String query2 = "UPDATE customer SET money = money - " + royalty +
+                    "WHERE user_id=" + userID;
+            System.out.println(query2);
+            statement.executeUpdate(query2);
+
+            String query3 = "INSERT INTO sale (book_id, quantity, customer_id, time)" + " " +
+                    "VALUES(" + book.book_id + ", " + amount + ", " + userID + ", '" +
+                    new Timestamp(System.currentTimeMillis())+"')";
+            System.out.println(query3);
+            statement.executeUpdate(query3);
+
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException se) {
+            System.out.println("ERROR: " + se.getMessage());
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
+        }
     }
     public void leaveReview(int book_id, Review review)
     {
@@ -228,6 +275,9 @@ public class Database {
         query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
         query += "JOIN publisher ON book.publisher_id = publisher.id ";
+        query += "LEFT JOIN book_type ON book.type = book_type.id";
+
+
         query += "WHERE ";
         query += "book.publisher_id=" + publisherID;
 
@@ -243,7 +293,7 @@ public class Database {
                         resultSet.getString("subtitle"),
                         resultSet.getString("isbn"),
                         resultSet.getDouble("price"),
-                        resultSet.getString("type"),
+                        resultSet.getString("book_type"),
                         resultSet.getInt("id")));
             }
         }

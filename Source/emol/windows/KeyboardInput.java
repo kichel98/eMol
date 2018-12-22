@@ -10,7 +10,15 @@ public class KeyboardInput {
 
     //From PresentBooksWindow
     public String keyword;
+    public boolean ebook;
+    public boolean paperback;
+    public boolean audiobook;
+    public int priceLowerThan;
+    public int priceHigherThan;
 
     //FROM bookWindow
     public Review review;
+    public int amount;
+
+
 }

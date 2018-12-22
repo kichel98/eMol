@@ -1,12 +1,16 @@
 package emol.windows;
 
+import emol.Book;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class PublisherMainWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
+    public ArrayList<Book> books = new ArrayList<Book>();
 
     public PublisherMainWindow(ActionListener actionListener, JFrame frame)
     {
@@ -35,9 +39,15 @@ public class PublisherMainWindow {
 
         panel.add(salesLabel);
 
-        for(int i=0; i<5; i++)
+        JButton addBookBTN = new JButton("Add A Book");
+        addBookBTN.addActionListener(actionListener);
+        addBookBTN.setBackground(Color.BLACK);
+        addBookBTN.setForeground(Color.white);
+        panel.add(addBookBTN);
+
+        for(int i=0; i<books.size(); i++)
         {
-            JButton bookBTN = new JButton("Book"+i);
+            JButton bookBTN = new JButton("Book"+i+": "+books.get(i).title+": "+books.get(i).subtitle);
             bookBTN.addActionListener(actionListener);
             bookBTN.setBackground(Color.BLACK);
             bookBTN.setForeground(Color.white);
