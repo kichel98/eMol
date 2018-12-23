@@ -1,19 +1,15 @@
 package emol.windows;
 
-import emol.Book;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public class PublisherMainWindow {
+public class AddingBookWindowPaperbackNextPage {
     private ActionListener actionListener;
     private JFrame mainFrame;
-    public ArrayList<Book> books = new ArrayList<Book>();
-    public double royalty = 100;
+    private JTextField pagesTextField = new JTextField();
 
-    public PublisherMainWindow(ActionListener actionListener, JFrame frame)
+    public  AddingBookWindowPaperbackNextPage(ActionListener actionListener, JFrame frame)
     {
         this.actionListener = actionListener;
         this.mainFrame = frame;
@@ -24,38 +20,40 @@ public class PublisherMainWindow {
         mainFrame.getContentPane().setBackground( java.awt.Color.DARK_GRAY );
         mainFrame.setLayout(new GridBagLayout());
 
-        System.out.println("Drawing the PublisherMainWindow...");
+        System.out.println("Drawing the AddingBookWindow...");
 
-        JLabel salesLabel = new JLabel("Sales: $"+royalty);
-        salesLabel.setBackground(Color.BLACK);
-        salesLabel.setForeground(Color.white);
-        salesLabel.setOpaque(true);
-        salesLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel pagesLabel = new JLabel("Pages");
+        pagesLabel.setBackground(Color.BLACK);
+        pagesLabel.setForeground(Color.white);
+        pagesLabel.setOpaque(true);
+        pagesLabel.setHorizontalAlignment(JLabel.CENTER);
 
         //Creating the Center Panel
-        JPanel panel = new JPanel(new GridLayout(7, 1, 20, 1));
+        JPanel panel = new JPanel(new GridLayout(11, 1, 20, 1));
         panel.setBounds(0,0,500 ,800);
         panel.setPreferredSize(new Dimension(700, 550));
         panel.setBackground(Color.DARK_GRAY);
 
-        panel.add(salesLabel);
 
-        JButton addBookBTN = new JButton("Add A Book");
+        panel.add(pagesLabel);
+        panel.add(pagesTextField);
+
+        JButton backToDetailsBTN = new JButton("Back to details");
+        backToDetailsBTN.addActionListener(actionListener);
+        backToDetailsBTN.setBackground(Color.BLACK);
+        backToDetailsBTN.setForeground(Color.white);
+        panel.add(backToDetailsBTN);
+
+        JButton addBookBTN = new JButton("Publish");
         addBookBTN.addActionListener(actionListener);
         addBookBTN.setBackground(Color.BLACK);
         addBookBTN.setForeground(Color.white);
         panel.add(addBookBTN);
 
-        for(int i=0; i<books.size(); i++)
-        {
-            JButton bookBTN = new JButton("Book"+i+": "+books.get(i).title+": "+books.get(i).subtitle);
-            bookBTN.addActionListener(actionListener);
-            bookBTN.setBackground(Color.BLACK);
-            bookBTN.setForeground(Color.white);
-            panel.add(bookBTN);
-        }
 
-        JButton backBTN = new JButton("Logout");
+
+
+        JButton backBTN = new JButton("Back");
         backBTN.addActionListener(actionListener);
         backBTN.setBackground(Color.BLACK);
         backBTN.setForeground(Color.white);
@@ -74,5 +72,13 @@ public class PublisherMainWindow {
         mainFrame.repaint();
         mainFrame.setVisible(true);
 
+    }
+
+    public KeyboardInput getInput()
+    {
+        KeyboardInput ki = new KeyboardInput();
+        ki.pagesPaperback = Integer.parseInt(pagesTextField.getText());
+
+        return ki;
     }
 }

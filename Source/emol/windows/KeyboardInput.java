@@ -20,5 +20,30 @@ public class KeyboardInput {
     public Review review;
     public int amount;
 
+    //Adding Book Window
+    public String title;
+    public String subtitle;
+    public double price;
+    public String description;
+    public String book_type;
+    public String author;
+    public String ISBN;
+    public String language;
+
+    //Adding audiobook
+    public double length;
+    public String narrator;
+    public int fileSizeAudiobook;
+
+    //Adding ebook
+    public int pagesEbook;
+    public int fileSizeEbook;
+
+    //Adding paperback
+    public int pagesPaperback;
+
+
+
+
 
 }

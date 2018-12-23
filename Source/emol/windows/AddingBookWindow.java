@@ -14,6 +14,11 @@ public class AddingBookWindow {
     private JTextField priceTextField = new JTextField();
     private JTextField authorTextField = new JTextField();
     private JTextField descriptionTextField = new JTextField();
+    private JTextField ISBNTextField = new JTextField();
+    private JTextField languageTextField = new JTextField();
+
+    private String book_types[] = {"ebook", "paperback", "audiobook"};
+    private JComboBox<String> book_typesComboBox = new JComboBox<>(book_types);
 
     public AddingBookWindow(ActionListener actionListener, JFrame frame)
     {
@@ -58,11 +63,24 @@ public class AddingBookWindow {
         descriptionLabel.setOpaque(true);
         descriptionLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        JLabel ISBNLabel = new JLabel("ISBN");
+        ISBNLabel.setBackground(Color.BLACK);
+        ISBNLabel.setForeground(Color.white);
+        ISBNLabel.setOpaque(true);
+        ISBNLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel languageLabel = new JLabel("Language");
+        languageLabel.setBackground(Color.BLACK);
+        languageLabel.setForeground(Color.white);
+        languageLabel.setOpaque(true);
+        languageLabel.setHorizontalAlignment(JLabel.CENTER);
+
         //Creating the Center Panel
-        JPanel panel = new JPanel(new GridLayout(11, 1, 20, 1));
+        JPanel panel = new JPanel(new GridLayout(13, 1, 20, 1));
         panel.setBounds(0,0,500 ,800);
         panel.setPreferredSize(new Dimension(700, 550));
         panel.setBackground(Color.DARK_GRAY);
+
 
         panel.add(titleLabel);
         panel.add(titleTextField);
@@ -74,13 +92,18 @@ public class AddingBookWindow {
         panel.add(priceTextField);
         panel.add(descriptionLabel);
         panel.add(descriptionTextField);
+        panel.add(ISBNLabel);
+        panel.add(ISBNTextField);
+        panel.add(languageLabel);
+        panel.add(languageTextField);
+        panel.add(book_typesComboBox);
 
 
-        JButton addBookBTN = new JButton("Publish");
-        addBookBTN.addActionListener(actionListener);
-        addBookBTN.setBackground(Color.BLACK);
-        addBookBTN.setForeground(Color.white);
-        panel.add(addBookBTN);
+        JButton nextPageBTN = new JButton("Next Page");
+        nextPageBTN.addActionListener(actionListener);
+        nextPageBTN.setBackground(Color.BLACK);
+        nextPageBTN.setForeground(Color.white);
+        panel.add(nextPageBTN);
 
 
         JButton backBTN = new JButton("Back");
@@ -102,5 +125,20 @@ public class AddingBookWindow {
         mainFrame.repaint();
         mainFrame.setVisible(true);
 
+    }
+
+    public KeyboardInput getInput()
+    {
+        KeyboardInput ki = new KeyboardInput();
+        ki.title = titleTextField.getText();
+        ki.subtitle = subtitleTextField.getText();
+        ki.price = Double.parseDouble(priceTextField.getText());
+        ki.author = authorTextField.getText();
+        ki.description = descriptionTextField.getText();
+        ki.book_type = book_types[book_typesComboBox.getSelectedIndex()];
+        ki.ISBN = ISBNTextField.getText();
+        ki.language = languageTextField.getText();
+
+        return ki;
     }
 }

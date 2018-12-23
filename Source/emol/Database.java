@@ -197,6 +197,7 @@ public class Database {
         return itDoes;
     }
 
+    //Done
     public void buyBook(Book book, int amount, int userID) {
         try {
             //Assume a valid connection object conn
@@ -238,6 +239,8 @@ public class Database {
             }
         }
     }
+
+    //Done
     public void leaveReview(int book_id, Review review)
     {
         String query = "INSERT INTO review (book_id, rating, description) VALUES(" +
@@ -253,24 +256,36 @@ public class Database {
     }
 
     //Publisher---------------------------------------------------------------------------------
+    //TODO:
     public void addEBook(String ISBN, String Title, String subTitle, double price, String author,
-                         int publisherID, String language, String date, String Description, int fileSize)
+                         int publisherID, String language, String Description, int fileSize, int pages)
     {
+        System.out.println("An eBook has been published");
+        //Date - current
 
     }
+    //TODO:
     public void addPBackBook(String ISBN, String Title, String subTitle, double price, String author,
-                         int publisherID, String language, String date, String Description, int numberOfPages)
+                         int publisherID, String language, String Description, int numberOfPages)
     {
+        System.out.println("A paperback has been published");
+        //Date - current
 
     }
+    //TODO:
     public void addABook(String ISBN, String Title, String subTitle, double price, String author,
-                             int publisherID, String language, String date, String Description, int length)
+                             int publisherID, String language, String Description,
+                         double length, String narrator, int fileSize)
     {
+        System.out.println("An audiobook has been published");
+        //Date - current
 
     }
+
+    //Done
     public ArrayList<Book> downloadPublishersBooks(int publisherID)
     {
-        String query = "SELECT book.id, title, subtitle, isbn, price, type FROM book ";
+        String query = "SELECT book.id, title, subtitle, isbn, price, book_type.name FROM book ";
         query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
         query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
@@ -278,7 +293,7 @@ public class Database {
         query += "LEFT JOIN book_type ON book.type = book_type.id";
 
 
-        query += "WHERE ";
+        query += " WHERE ";
         query += "book.publisher_id=" + publisherID;
 
         System.out.println("Downloading books for publisher...");
@@ -293,33 +308,51 @@ public class Database {
                         resultSet.getString("subtitle"),
                         resultSet.getString("isbn"),
                         resultSet.getDouble("price"),
-                        resultSet.getString("book_type"),
+                        resultSet.getString("name"),
                         resultSet.getInt("id")));
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
         return bookData;
     }
-
-    public void downloadSales(String ISBN)
+    //TODO:
+    public void downloadSales(int bookID)
     {
 
     }
-    public void DownloadRoyalty(int publisherID)
+    public double DownloadRoyalty(int publisherID)
     {
+        String query = "SELECT royalty FROM publisher WHERE id="+publisherID;
 
+        System.out.println("Downloading royalties for publisher...");
+        System.out.println("QUERY: "+query);
+
+        double royalty = 0;
+
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next())
+            {
+                royalty = resultSet.getDouble("royalty");
+            }
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        return royalty;
     }
 
     //Support------------------------------------------------------------------------------------
-    public void deleteBook(String ISBN)
+    //TODO:
+    public void deleteBook(int bookID)
     {
 
     }
+    //TODO:
     public void deleteReview(int reviewID)
     {
 
     }
     //dostawa książek
+    //TODO:
     public void warehouseShipment(String ISBN, int amount)
     {
 

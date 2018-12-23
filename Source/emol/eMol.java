@@ -32,6 +32,10 @@ public class eMol {
         SupportMainWindow supportMainWindow;
         AddingBookWindow addingBookWindow;
 
+        AddingBookWindowEbookNextPage addingBookWindowEbookNextPage;
+        AddingBookWindowPaperbackNextPage addingBookWindowPaperbackNextPage;
+        AddingBookWindowAudiobookNextPage addingBookWindowAudiobookNextPage;
+
         MainWindow(JFrame frame)
         {
             this.frame = frame;
@@ -43,6 +47,10 @@ public class eMol {
             supportMainWindow = new SupportMainWindow(this, frame);
             addingBookWindow = new AddingBookWindow(this, frame);
 
+            addingBookWindowEbookNextPage = new AddingBookWindowEbookNextPage(this, frame);
+            addingBookWindowPaperbackNextPage = new AddingBookWindowPaperbackNextPage(this, frame);
+            addingBookWindowAudiobookNextPage = new AddingBookWindowAudiobookNextPage(this, frame);
+
         }
 
         @Override
@@ -50,7 +58,7 @@ public class eMol {
             String command = e.getActionCommand();
 
             if( command.equals( "Log In" ))  {
-                System.out.println("Logging to the system...");
+                System.out.println("Logging into the system...");
                 KeyboardInput keyboardInput = loginWindow.getInput();
 
                 //Do debugowania - żeby szybciej logowanie szło
@@ -61,6 +69,7 @@ public class eMol {
 
                 if(user.type.equals("Customer")) presentBooksWindow.display();
                 else if(user.type.equals("Publisher")) {
+                    publisherMainWindow.royalty = database.DownloadRoyalty(user.publisherID);
                     publisherMainWindow.books = database.downloadPublishersBooks(user.publisherID);
                     publisherMainWindow.display();
                 }
@@ -84,6 +93,10 @@ public class eMol {
                     bookWindow.reviews = database.downloadReviews(bookWindow.book.isbn);
                     bookWindow.display();
                 }
+                else if(user.type.equals("Publisher"))
+                {
+                    //TODO: displaying book info for publisher
+                }
 
             } else if( command.equals("Buy") )  {
                 Book book = bookWindow.book;
@@ -91,7 +104,7 @@ public class eMol {
                 database.buyBook(book, KI.amount, user.ID);
                 System.out.println("You bought a book");
 
-            } else if( command.startsWith( "Search" ) )  {
+            } else if( command.equals( "Search" ) )  {
                 System.out.println("Presenting books...");
                 if(user.type.equals("Customer")) {
                     KeyboardInput keyboardInput = presentBooksWindow.getInput();
@@ -102,7 +115,7 @@ public class eMol {
                     presentBooksWindow.display();
                 }
 
-            } else if( command.startsWith( "Leave a Review" ) )  {
+            } else if( command.equals( "Leave a Review" ) )  {
                 System.out.println("Leaving a Review...");
                 if(user.type.equals("Customer")) {
                     KeyboardInput keyboardInput = bookWindow.getInput();
@@ -115,12 +128,39 @@ public class eMol {
             } else if( command.equals( "Add A Book" ) )  {
                 addingBookWindow.display();
 
+            } else if( command.equals( "Next Page" ) )  {
+                KeyboardInput ki = addingBookWindow.getInput();
+                if(ki.book_type.equals("ebook")) addingBookWindowEbookNextPage.display();
+                else if(ki.book_type.equals("paperback")) addingBookWindowPaperbackNextPage.display();
+                else if(ki.book_type.equals("audiobook")) addingBookWindowAudiobookNextPage.display();
 
+            } else if( command.equals( "Publish" ) )  {
+                KeyboardInput k1 = addingBookWindow.getInput();
+                KeyboardInput k2 = new KeyboardInput();
+                if(k1.book_type.equals("ebook")) k2 = addingBookWindowEbookNextPage.getInput();
+                else if(k1.book_type.equals("paperback")) k2 = addingBookWindowPaperbackNextPage.getInput();
+                else if(k1.book_type.equals("audiobook")) k2 = addingBookWindowAudiobookNextPage.getInput();
 
+                if(k1.book_type.equals("ebook"))
+                    database.addEBook(k1.ISBN, k1.title, k1.subtitle,
+                        k1.price, k1.author, user.publisherID, k1.language,
+                        k1.description, k2.fileSizeEbook, k2.pagesEbook);
+                else if(k1.book_type.equals("paperback"))
+                    database.addPBackBook(k1.ISBN, k1.title, k1.subtitle,
+                        k1.price, k1.author, user.publisherID, k1.language,
+                            k1.description, k2.pagesPaperback);
+                else if(k1.book_type.equals("audiobook"))
+                    database.addABook(k1.ISBN, k1.title, k1.subtitle,
+                            k1.price, k1.author, user.publisherID, k1.language,
+                            k1.description, k2.length, k2.narrator, k2.fileSizeEbook);
 
-            } else if( command.startsWith( "Exit" ) )  {
+            } else if( command.equals("Back to details") )  {
+                addingBookWindow.display();
+
+            } else if( command.equals( "Exit" ) )  {
                 System.out.println("Exiting...");
                 System.exit(0);
+
             }
             else {
                 System.out.println("Clicked unknown button");
