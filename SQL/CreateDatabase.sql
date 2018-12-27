@@ -48,18 +48,19 @@ FOREIGN KEY(user_type_id) REFERENCES user_type(id)
 CREATE TABLE book(
 id INT UNSIGNED AUTO_INCREMENT NOT NULL,
 isbn VARCHAR(60) UNIQUE,
-title VARCHAR(60),
-subtitle VARCHAR(60),
-description VARCHAR(60),
+title VARCHAR(70),
+subtitle VARCHAR(70),
+description VARCHAR(80),
 author VARCHAR(60),
 price DOUBLE,
 publisher_id INT UNSIGNED,
 date DATE,
-type VARCHAR(60) NOT NULL,
+type INT UNSIGNED NOT NULL,
 language_id INT UNSIGNED,
 PRIMARY KEY(id),
 FOREIGN KEY(publisher_id) REFERENCES publisher(id),
-FOREIGN KEY(language_id) REFERENCES language(id)
+FOREIGN KEY(language_id) REFERENCES language(id),
+FOREIGN KEY(type) REFERENCES book_type(id)
 );
 
 CREATE TABLE paperback(
