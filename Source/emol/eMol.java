@@ -64,8 +64,8 @@ public class eMol {
 
                 //Do debugowania - żeby szybciej logowanie szło
                 //user = database.connect(keyboardInput.username, keyboardInput.password);
-                //user = database.connect("publisher", "1234");
-                user = database.connect("customer", "1234");
+                user = database.connect("publisher", "1234");
+                //user = database.connect("customer", "1234");
                 //user = database.connect("support", "1234");
 
                 if(user.type.equals("Customer")) presentBooksWindow.display();
@@ -167,6 +167,12 @@ public class eMol {
                 String[] languagesArray = languagesArrayList.toArray(new String[0]);
                 addingBookWindow.languageComboBox = new JComboBox<String>(languagesArray);
 
+            } else if( command.equals( "Delete Book" ) ) {
+                KeyboardInput ki = supportMainWindow.getInput();
+                database.deleteBook(ki.toDeleteISBN);
+            } else if( command.equals( "Delete Review") ) {
+                KeyboardInput ki = supportMainWindow.getInput();
+                database.deleteReview(ki.reviewID);
             }
             else {
                 System.out.println("Clicked unknown button");

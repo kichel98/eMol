@@ -42,6 +42,10 @@ public class KeyboardInput {
     //Adding paperback
     public int pagesPaperback;
 
+    //From SupportMainWindow
+    public String toDeleteISBN;
+    public int reviewID;
+
 
 
 

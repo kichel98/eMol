@@ -67,7 +67,7 @@ CREATE TABLE paperback(
 book_id INT UNSIGNED NOT NULL,
 pages INT,
 PRIMARY KEY(book_id),
-FOREIGN KEY(book_id) REFERENCES book(id)
+FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ebook(
@@ -75,7 +75,7 @@ book_id INT UNSIGNED NOT NULL,
 pages INT,
 file_size INT,
 PRIMARY KEY(book_id),
-FOREIGN KEY(book_id) REFERENCES book(id)
+FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
 );
 
 CREATE TABLE audiobook(
@@ -84,7 +84,7 @@ length DOUBLE,
 file_size INT,
 narrator VARCHAR(90),
 PRIMARY KEY(book_id),
-FOREIGN KEY(book_id) REFERENCES book(id)
+FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
 );
 
 CREATE TABLE review(
@@ -93,14 +93,14 @@ book_id INT UNSIGNED,
 rating INT,
 description VARCHAR(90),
 PRIMARY KEY(id),
-FOREIGN KEY(book_id) REFERENCES book(id)
+FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
 );
 
 CREATE TABLE inventory(
 book_id INT UNSIGNED NOT NULL,
 quantity INT,
-PRIMARY KEY(book_id),
-FOREIGN KEY(book_id) REFERENCES book(id)
+PRIMARY KEY(book_id)
+#FOREIGN KEY(book_id) REFERENCES book(id)
 );
 
 CREATE TABLE customer(
@@ -117,6 +117,6 @@ quantity INT,
 customer_id INT UNSIGNED,
 time TIMESTAMP,
 PRIMARY KEY(id),
-FOREIGN KEY(book_id) REFERENCES book(id),
+#FOREIGN KEY(book_id) REFERENCES book(id),
 FOREIGN KEY(customer_id) REFERENCES customer(user_id)
 );

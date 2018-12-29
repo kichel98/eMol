@@ -67,4 +67,12 @@ public class SupportMainWindow {
         mainFrame.setVisible(true);
 
     }
+    public KeyboardInput getInput()
+    {
+        KeyboardInput keyboardInput = new KeyboardInput();
+        keyboardInput.toDeleteISBN = deleteBookTextField.getText();
+        if(deleteReviewTextField.getText().equals("") == false) //now, later it will be try-catch
+            keyboardInput.reviewID = Integer.parseInt(deleteReviewTextField.getText());
+        return keyboardInput;
+    }
 }

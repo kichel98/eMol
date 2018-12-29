@@ -259,7 +259,7 @@ public class Database {
     }
 
     //Publisher---------------------------------------------------------------------------------
-    //TODO:
+    //Done
     public void addEBook(String ISBN, String title, String subTitle, double price, String author,
                          int publisherID, int languageID, String description, int fileSize, int pages)
     {
@@ -275,7 +275,7 @@ public class Database {
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
-    //TODO:
+    //Done
     public void addPBackBook(String ISBN, String title, String subTitle, double price, String author,
                          int publisherID, int languageID, String description, int pages)
     {
@@ -290,7 +290,7 @@ public class Database {
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
-    //TODO:
+    //Done
     public void addABook(String ISBN, String title, String subTitle, double price, String author,
                              int publisherID, int languageID, String description,
                          double length, String narrator, int fileSize)
@@ -398,21 +398,44 @@ public class Database {
     }
 
     //Support------------------------------------------------------------------------------------
-    //TODO:
-    public void deleteBook(int bookID)
+    //Done
+    public void deleteBook(String bookID)
     {
+        String query = "DELETE FROM book WHERE isbn = " + bookID;
+        System.out.println("QUERY: " + query);
+
+        try {
+            statement.executeUpdate(query);
+            System.out.println("A book has been deleted");
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
 
     }
-    //TODO:
+    //Done
     public void deleteReview(int reviewID)
     {
+        String query = "DELETE FROM review WHERE id = " + reviewID;
+        System.out.println("QUERY: " + query);
 
+        try {
+            statement.executeUpdate(query);
+            System.out.println("A review has been deleted");
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
     //dostawa książek
-    //TODO:
+    //TODO: calling this method
     public void warehouseShipment(String ISBN, int amount)
     {
+        String query = "UPDATE inventory JOIN book ON inventory.book_id = book.id SET quantity = quantity + " +
+                amount + " WHERE isbn = '" + ISBN + "'";
+        System.out.println("QUERY: " + query);
 
+        try {
+            statement.executeUpdate(query);
+            System.out.println("An inventory has been updated");
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
 
 }
