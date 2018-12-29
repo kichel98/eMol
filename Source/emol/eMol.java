@@ -6,6 +6,7 @@ import emol.windows.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class eMol {
@@ -143,16 +144,16 @@ public class eMol {
 
                 if(k1.book_type.equals("ebook"))
                     database.addEBook(k1.ISBN, k1.title, k1.subtitle,
-                        k1.price, k1.author, user.publisherID, k1.language,
+                        k1.price, k1.author, user.publisherID, k1.languageID,
                         k1.description, k2.fileSizeEbook, k2.pagesEbook);
                 else if(k1.book_type.equals("paperback"))
                     database.addPBackBook(k1.ISBN, k1.title, k1.subtitle,
-                        k1.price, k1.author, user.publisherID, k1.language,
+                        k1.price, k1.author, user.publisherID, k1.languageID,
                             k1.description, k2.pagesPaperback);
                 else if(k1.book_type.equals("audiobook"))
                     database.addABook(k1.ISBN, k1.title, k1.subtitle,
-                            k1.price, k1.author, user.publisherID, k1.language,
-                            k1.description, k2.length, k2.narrator, k2.fileSizeEbook);
+                            k1.price, k1.author, user.publisherID, k1.languageID,
+                            k1.description, k2.length, k2.narrator, k2.fileSizeAudiobook);
 
             } else if( command.equals("Back to details") )  {
                 addingBookWindow.display();
@@ -160,6 +161,11 @@ public class eMol {
             } else if( command.equals( "Exit" ) )  {
                 System.out.println("Exiting...");
                 System.exit(0);
+
+            } else if( command.equals( "Get languages" ) )  {
+                ArrayList<String> languagesArrayList = database.downloadLanguages();
+                String[] languagesArray = languagesArrayList.toArray(new String[0]);
+                addingBookWindow.languageComboBox = new JComboBox<String>(languagesArray);
 
             }
             else {

@@ -28,7 +28,7 @@ public class KeyboardInput {
     public String book_type;
     public String author;
     public String ISBN;
-    public String language;
+    public int languageID;
 
     //Adding audiobook
     public double length;

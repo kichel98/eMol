@@ -4,6 +4,7 @@ import emol.Book;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddingBookWindow {
@@ -15,7 +16,7 @@ public class AddingBookWindow {
     private JTextField authorTextField = new JTextField();
     private JTextField descriptionTextField = new JTextField();
     private JTextField ISBNTextField = new JTextField();
-    private JTextField languageTextField = new JTextField();
+    public JComboBox<String> languageComboBox;
 
     private String book_types[] = {"ebook", "paperback", "audiobook"};
     private JComboBox<String> book_typesComboBox = new JComboBox<>(book_types);
@@ -75,6 +76,11 @@ public class AddingBookWindow {
         languageLabel.setOpaque(true);
         languageLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        // languageComboBox has to connect with Database
+        // here I manually call actionPerformed to get all languages
+        actionListener.actionPerformed(new ActionEvent(this,
+                ActionEvent.ACTION_PERFORMED, "Get languages"));
+
         //Creating the Center Panel
         JPanel panel = new JPanel(new GridLayout(13, 1, 20, 1));
         panel.setBounds(0,0,500 ,800);
@@ -95,7 +101,7 @@ public class AddingBookWindow {
         panel.add(ISBNLabel);
         panel.add(ISBNTextField);
         panel.add(languageLabel);
-        panel.add(languageTextField);
+        panel.add(languageComboBox);
         panel.add(book_typesComboBox);
 
 
@@ -137,7 +143,7 @@ public class AddingBookWindow {
         ki.description = descriptionTextField.getText();
         ki.book_type = book_types[book_typesComboBox.getSelectedIndex()];
         ki.ISBN = ISBNTextField.getText();
-        ki.language = languageTextField.getText();
+        ki.languageID = languageComboBox.getSelectedIndex() + 1;
 
         return ki;
     }

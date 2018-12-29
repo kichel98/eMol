@@ -3,7 +3,10 @@ package emol;
 import emol.enums.SortType;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Database {
     private Connection connection;
@@ -136,10 +139,10 @@ public class Database {
     {
 
         ArrayList<String> languages = new ArrayList<String>();
-        String query = "SELECT * FROM languages";
+        String query = "SELECT * FROM language";
 
         System.out.println("Downloading languages...");
-        System.out.println(query);
+        System.out.println("QUERY: " +query);
 
         try {
             ResultSet resultSet = statement.executeQuery(query);
@@ -257,29 +260,83 @@ public class Database {
 
     //Publisher---------------------------------------------------------------------------------
     //TODO:
-    public void addEBook(String ISBN, String Title, String subTitle, double price, String author,
-                         int publisherID, String language, String Description, int fileSize, int pages)
+    public void addEBook(String ISBN, String title, String subTitle, double price, String author,
+                         int publisherID, int languageID, String description, int fileSize, int pages)
     {
-        System.out.println("An eBook has been published");
-        //Date - current
+        try {
+            int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 1);
 
+            String eBookQuery = "INSERT INTO ebook (book_id, pages, file_size) VALUES (" + bookID + "," +
+                    pages + "," + fileSize + ")";
+            System.out.println("QUERY: " + eBookQuery);
+            statement.executeUpdate(eBookQuery);
+
+            System.out.println("An eBook has been published");
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
     //TODO:
-    public void addPBackBook(String ISBN, String Title, String subTitle, double price, String author,
-                         int publisherID, String language, String Description, int numberOfPages)
+    public void addPBackBook(String ISBN, String title, String subTitle, double price, String author,
+                         int publisherID, int languageID, String description, int pages)
     {
-        System.out.println("A paperback has been published");
-        //Date - current
+        try {
+            int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 2);
 
+            String pBackBookQuery = "INSERT INTO paperback (book_id, pages) VALUES (" + bookID + "," +
+                    pages + ")";
+            System.out.println("QUERY: " + pBackBookQuery);
+            statement.executeUpdate(pBackBookQuery);
+            System.out.println("A paperback has been published");
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
     //TODO:
-    public void addABook(String ISBN, String Title, String subTitle, double price, String author,
-                             int publisherID, String language, String Description,
+    public void addABook(String ISBN, String title, String subTitle, double price, String author,
+                             int publisherID, int languageID, String description,
                          double length, String narrator, int fileSize)
     {
-        System.out.println("An audiobook has been published");
-        //Date - current
+        try {
+            int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 3);
 
+            String audiobookQuery = "INSERT INTO audiobook (book_id, length, file_size, narrator) VALUES ("
+                    + bookID + "," + length + "," + fileSize + ",'" + narrator + "')";
+            System.out.println("QUERY: " + audiobookQuery);
+            statement.executeUpdate(audiobookQuery);
+            System.out.println("An audiobook has been published");
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+
+    }
+    private int addBook(String ISBN, String title, String subTitle, double price, String author,
+                        int publisherID, int languageID, String description, int type) throws SQLException
+    {
+        int bookID = 0;
+
+        //Date - current
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+
+        String bookQuery = "INSERT INTO book (isbn, title, subtitle, description, author, price, publisher_id, " +
+                "date, type, language_id) VALUES (" + ISBN + ",'" + title + "','" + subTitle + "','" + description +
+                "','" + author + "'," + price + "," + publisherID + ",'" + dateFormat.format(date) + "'," + type +
+                "," + languageID + ")";
+
+        String bookIdQuery = "SELECT id FROM book WHERE isbn = '" + ISBN + "'";
+
+        if(checkIfISBNAlreadyExists(ISBN))
+            throw new SQLException("This ISBN already exists.");
+
+        System.out.println("QUERY: " + bookQuery);
+        statement.executeUpdate(bookQuery);
+
+        System.out.println("QUERY: " + bookIdQuery);
+        ResultSet resultSet2 = statement.executeQuery(bookIdQuery);
+        resultSet2.next();
+        bookID = resultSet2.getInt("id");
+
+        System.out.println("A Book has been published");
+
+        return bookID;
     }
 
     //Done
