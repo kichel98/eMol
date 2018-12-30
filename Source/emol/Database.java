@@ -164,7 +164,7 @@ public class Database {
                 "JOIN book ON book.id=review.book_id WHERE book.isbn='" + ISBN + "' LIMIT 10";
 
         System.out.println("Downloading reviews for a book...");
-        System.out.println(query);
+        System.out.println("QUERY: " + query);
 
         try {
             ResultSet resultSet = statement.executeQuery(query);
@@ -208,7 +208,7 @@ public class Database {
 
             String query0 = "SELECT publisher.id FROM publisher JOIN book ON publisher.id = book.publisher_id " +
                     "WHERE book.id='" + book.book_id + "'";
-            System.out.println(query0);
+            System.out.println("QUERY: " + query0);
             ResultSet rs = statement.executeQuery(query0);
             rs.next();
             int publisher_id = rs.getInt("id");
@@ -216,13 +216,13 @@ public class Database {
             double royalty = amount * book.price;
 
             String query1 = "UPDATE publisher SET royalty = royalty + " + royalty +
-                    "WHERE publisher.id=" + publisher_id;
-            System.out.println(query1);
+                    " WHERE publisher.id=" + publisher_id;
+            System.out.println("QUERY: " + query1);
             statement.executeUpdate(query1);
 
             String query2 = "UPDATE customer SET money = money - " + royalty +
-                    "WHERE user_id=" + userID;
-            System.out.println(query2);
+                    " WHERE user_id=" + userID;
+            System.out.println("QUERY: " + query2);
             statement.executeUpdate(query2);
 
             String query3 = "UPDATE inventory SET quantity = quantity - " + amount +
@@ -233,7 +233,7 @@ public class Database {
             String query4 = "INSERT INTO sale (book_id, quantity, customer_id, time)" + " " +
                     "VALUES(" + book.book_id + ", " + amount + ", " + userID + ", '" +
                     new Timestamp(System.currentTimeMillis())+"')";
-            System.out.println(query4);
+            System.out.println("QUERY: " + query4);
             statement.executeUpdate(query4);
 
             connection.commit();
@@ -256,7 +256,7 @@ public class Database {
                 book_id + ", "+ review.rating +", '" + review.description + "')";
 
         System.out.println("Uploading a review for a book...");
-        System.out.println(query);
+        System.out.println("QUERY: " + query);
 
         try {
             statement.executeUpdate(query);
@@ -270,31 +270,50 @@ public class Database {
                          int publisherID, int languageID, String description, int fileSize, int pages)
     {
         try {
+            connection.setAutoCommit(false);
             int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 1);
 
             String eBookQuery = "INSERT INTO ebook (book_id, pages, file_size) VALUES (" + bookID + "," +
                     pages + "," + fileSize + ")";
             System.out.println("QUERY: " + eBookQuery);
             statement.executeUpdate(eBookQuery);
-
+            connection.commit();
+            connection.setAutoCommit(true);
             System.out.println("An eBook has been published");
         }
-        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        catch (SQLException se) {
+            System.out.println("ERROR: " + se.getMessage());
+            try {
+               connection.rollback();
+            } catch (SQLException e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
+        }
     }
     //Done
     public void addPBackBook(String ISBN, String title, String subTitle, double price, String author,
                          int publisherID, int languageID, String description, int pages)
     {
         try {
+            connection.setAutoCommit(false);
             int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 2);
 
             String pBackBookQuery = "INSERT INTO paperback (book_id, pages) VALUES (" + bookID + "," +
                     pages + ")";
             System.out.println("QUERY: " + pBackBookQuery);
             statement.executeUpdate(pBackBookQuery);
+            connection.commit();
+            connection.setAutoCommit(true);
             System.out.println("A paperback has been published");
         }
-        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        catch (SQLException se) {
+            System.out.println("ERROR: " + se.getMessage());
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
+        }
     }
     //Done
     public void addABook(String ISBN, String title, String subTitle, double price, String author,
@@ -302,15 +321,25 @@ public class Database {
                          double length, String narrator, int fileSize)
     {
         try {
+            connection.setAutoCommit(false);
             int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 3);
 
             String audiobookQuery = "INSERT INTO audiobook (book_id, length, file_size, narrator) VALUES ("
                     + bookID + "," + length + "," + fileSize + ",'" + narrator + "')";
             System.out.println("QUERY: " + audiobookQuery);
             statement.executeUpdate(audiobookQuery);
+            connection.commit();
+            connection.setAutoCommit(true);
             System.out.println("An audiobook has been published");
         }
-        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        catch (SQLException se) {
+            System.out.println("ERROR: " + se.getMessage());
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
+        }
 
     }
     private int addBook(String ISBN, String title, String subTitle, double price, String author,
@@ -323,7 +352,7 @@ public class Database {
         Date date = new Date();
 
         String bookQuery = "INSERT INTO book (isbn, title, subtitle, description, author, price, publisher_id, " +
-                "date, type, language_id) VALUES (" + ISBN + ",'" + title + "','" + subTitle + "','" + description +
+                "date, type, language_id) VALUES ('" + ISBN + "','" + title + "','" + subTitle + "','" + description +
                 "','" + author + "'," + price + "," + publisherID + ",'" + dateFormat.format(date) + "'," + type +
                 "," + languageID + ")";
 

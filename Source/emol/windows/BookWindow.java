@@ -13,7 +13,8 @@ public class BookWindow {
     private JFrame mainFrame;
     private JTextField amountTextField = new JTextField();
     private JTextField reviewTextField = new JTextField();
-    private JTextField ratingTextField = new JTextField();
+    private Integer[] ratingValues = {1, 2, 3, 4, 5};
+    private JComboBox<Integer> ratingComboBox = new JComboBox<>(ratingValues);
 
     public Book book;
     public ArrayList<Review> reviews = new ArrayList<Review>();
@@ -120,7 +121,7 @@ public class BookWindow {
         ratingLabel.setOpaque(true);
         ratingLabel.setHorizontalAlignment(JLabel.CENTER);
         leaveReviewPanel.add(ratingLabel);
-        leaveReviewPanel.add(ratingTextField);
+        leaveReviewPanel.add(ratingComboBox);
 
         JLabel descriptionLabel = new JLabel("Description");
         descriptionLabel.setBackground(Color.BLACK);
@@ -166,8 +167,8 @@ public class BookWindow {
     public KeyboardInput getInput()
     {
         KeyboardInput ki = new KeyboardInput();
-        if(!ratingTextField.getText().isEmpty() && !reviewTextField.getText().isEmpty())
-            ki.review = new Review(Integer.parseInt(ratingTextField.getText()), reviewTextField.getText());
+        if(!reviewTextField.getText().isEmpty())
+            ki.review = new Review((int) ratingComboBox.getSelectedItem(), reviewTextField.getText());
         if(!amountTextField.getText().isEmpty()) ki.amount = Integer.parseInt(amountTextField.getText());
         return ki;
     }

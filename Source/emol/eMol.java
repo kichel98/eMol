@@ -64,8 +64,8 @@ public class eMol {
 
                 //Do debugowania - żeby szybciej logowanie szło
                 //user = database.connect(keyboardInput.username, keyboardInput.password);
-                //user = database.connect("publisher", "1234");
-                user = database.connect("customer", "1234");
+                user = database.connect("publisher", "1234");
+                //user = database.connect("customer", "1234");
                 //user = database.connect("support", "1234");
 
                 if(user.type.equals("Customer")) presentBooksWindow.display();
