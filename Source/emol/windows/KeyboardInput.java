@@ -45,6 +45,8 @@ public class KeyboardInput {
     //From SupportMainWindow
     public String toDeleteISBN;
     public int reviewID;
+    public String toShipmentISBN;
+    public int toShipmentAmount;
 
 
 

@@ -11,6 +11,8 @@ public class SupportMainWindow {
 
     private JTextField deleteBookTextField = new JTextField();
     private JTextField deleteReviewTextField = new JTextField();
+    private JTextField warehouseShipmentISBN = new JTextField("ISBN");
+    private JTextField warehouseShipmentAmount = new JTextField("amount");
 
     public SupportMainWindow(ActionListener actionListener, JFrame frame)
     {
@@ -37,8 +39,14 @@ public class SupportMainWindow {
         deleteReviewBTN.setBackground(Color.BLACK);
         deleteReviewBTN.setForeground(Color.white);
 
+        //Creating the WarehouseShipment Button
+        JButton warehouseShipmentBTN = new JButton("Warehouse Shipment");
+        warehouseShipmentBTN.addActionListener(actionListener);
+        warehouseShipmentBTN.setBackground(Color.BLACK);
+        warehouseShipmentBTN.setForeground(Color.white);
+
         //Creating the Center Panel
-        JPanel panel = new JPanel(new GridLayout(6, 1, 20, 1));
+        JPanel panel = new JPanel(new GridLayout(8, 1, 20, 1));
         panel.setPreferredSize(new Dimension(300, 250));
         panel.setBackground(Color.DARK_GRAY);
 
@@ -52,6 +60,9 @@ public class SupportMainWindow {
         panel.add(deleteBookTextField);
         panel.add(deleteReviewBTN);
         panel.add(deleteReviewTextField);
+        panel.add(warehouseShipmentBTN);
+        panel.add(warehouseShipmentISBN);
+        panel.add(warehouseShipmentAmount);
         panel.add(backBTN);
 
         //Creating the main (full) window
@@ -73,6 +84,10 @@ public class SupportMainWindow {
         keyboardInput.toDeleteISBN = deleteBookTextField.getText();
         if(deleteReviewTextField.getText().equals("") == false) //now, later it will be try-catch
             keyboardInput.reviewID = Integer.parseInt(deleteReviewTextField.getText());
+        if(warehouseShipmentISBN.getText().equals("ISBN") == false)
+            keyboardInput.toShipmentISBN = warehouseShipmentISBN.getText();
+        if(warehouseShipmentAmount.getText().equals("amount") == false) //now, later it will be try-catch
+            keyboardInput.toShipmentAmount = Integer.parseInt(warehouseShipmentAmount.getText());
         return keyboardInput;
     }
 }

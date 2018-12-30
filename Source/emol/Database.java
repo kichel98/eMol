@@ -225,14 +225,20 @@ public class Database {
             System.out.println(query2);
             statement.executeUpdate(query2);
 
-            String query3 = "INSERT INTO sale (book_id, quantity, customer_id, time)" + " " +
+            String query3 = "UPDATE inventory SET quantity = quantity - " + amount +
+                    " WHERE book_id = " + book.book_id;
+            System.out.println("QUERY: " + query3);
+            statement.executeUpdate(query3);
+
+            String query4 = "INSERT INTO sale (book_id, quantity, customer_id, time)" + " " +
                     "VALUES(" + book.book_id + ", " + amount + ", " + userID + ", '" +
                     new Timestamp(System.currentTimeMillis())+"')";
-            System.out.println(query3);
-            statement.executeUpdate(query3);
+            System.out.println(query4);
+            statement.executeUpdate(query4);
 
             connection.commit();
             connection.setAutoCommit(true);
+            System.out.println("You bought a book");
         } catch (SQLException se) {
             System.out.println("ERROR: " + se.getMessage());
             try {
@@ -424,7 +430,7 @@ public class Database {
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
     }
     //dostawa książek
-    //TODO: calling this method
+    //Done
     public void warehouseShipment(String ISBN, int amount)
     {
         String query = "UPDATE inventory JOIN book ON inventory.book_id = book.id SET quantity = quantity + " +

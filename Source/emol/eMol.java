@@ -64,8 +64,8 @@ public class eMol {
 
                 //Do debugowania - żeby szybciej logowanie szło
                 //user = database.connect(keyboardInput.username, keyboardInput.password);
-                user = database.connect("publisher", "1234");
-                //user = database.connect("customer", "1234");
+                //user = database.connect("publisher", "1234");
+                user = database.connect("customer", "1234");
                 //user = database.connect("support", "1234");
 
                 if(user.type.equals("Customer")) presentBooksWindow.display();
@@ -103,7 +103,6 @@ public class eMol {
                 Book book = bookWindow.book;
                 KeyboardInput KI = bookWindow.getInput();
                 database.buyBook(book, KI.amount, user.ID);
-                System.out.println("You bought a book");
 
             } else if( command.equals( "Search" ) )  {
                 System.out.println("Presenting books...");
@@ -173,6 +172,9 @@ public class eMol {
             } else if( command.equals( "Delete Review") ) {
                 KeyboardInput ki = supportMainWindow.getInput();
                 database.deleteReview(ki.reviewID);
+            } else if( command.equals( "Warehouse Shipment") ) {
+                KeyboardInput ki = supportMainWindow.getInput();
+                database.warehouseShipment(ki.toShipmentISBN, ki.toShipmentAmount);
             }
             else {
                 System.out.println("Clicked unknown button");
