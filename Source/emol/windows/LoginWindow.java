@@ -78,7 +78,12 @@ public class LoginWindow {
     {
         KeyboardInput keyboardInput = new KeyboardInput();
         keyboardInput.username = loginTextField.getText();
+        if(keyboardInput.username.isEmpty())
+            keyboardInput.username = null;
         keyboardInput.password = passwordTextField.getText();
+        if(keyboardInput.password.isEmpty())
+            keyboardInput.password = null;
+
         return keyboardInput;
     }
 

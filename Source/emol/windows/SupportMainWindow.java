@@ -45,8 +45,21 @@ public class SupportMainWindow {
         warehouseShipmentBTN.setBackground(Color.BLACK);
         warehouseShipmentBTN.setForeground(Color.white);
 
+        //Creating Backup Button
+        JButton backupBTN = new JButton("Backup");
+        backupBTN.addActionListener(actionListener);
+        backupBTN.setBackground(Color.BLACK);
+        backupBTN.setForeground(Color.white);
+
+        //Creating Restore Button
+        JButton restoreBTN = new JButton("Restore");
+        restoreBTN.addActionListener(actionListener);
+        restoreBTN.setBackground(Color.BLACK);
+        restoreBTN.setForeground(Color.white);
+
+
         //Creating the Center Panel
-        JPanel panel = new JPanel(new GridLayout(8, 1, 20, 1));
+        JPanel panel = new JPanel(new GridLayout(10, 1, 20, 1));
         panel.setPreferredSize(new Dimension(300, 250));
         panel.setBackground(Color.DARK_GRAY);
 
@@ -63,6 +76,8 @@ public class SupportMainWindow {
         panel.add(warehouseShipmentBTN);
         panel.add(warehouseShipmentISBN);
         panel.add(warehouseShipmentAmount);
+        panel.add(backupBTN);
+        panel.add(restoreBTN);
         panel.add(backBTN);
 
         //Creating the main (full) window
@@ -78,16 +93,30 @@ public class SupportMainWindow {
         mainFrame.setVisible(true);
 
     }
-    public KeyboardInput getInput()
+    public KeyboardInput getInput() throws NumberFormatException
     {
         KeyboardInput keyboardInput = new KeyboardInput();
         keyboardInput.toDeleteISBN = deleteBookTextField.getText();
-        if(deleteReviewTextField.getText().equals("") == false) //now, later it will be try-catch
-            keyboardInput.reviewID = Integer.parseInt(deleteReviewTextField.getText());
+        try {
+            if(deleteReviewTextField.getText().equals("") == false)
+                keyboardInput.reviewID = Integer.parseInt(deleteReviewTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("You need to enter review ID (number) to delete it");
+        }
+
         if(warehouseShipmentISBN.getText().equals("ISBN") == false)
             keyboardInput.toShipmentISBN = warehouseShipmentISBN.getText();
-        if(warehouseShipmentAmount.getText().equals("amount") == false) //now, later it will be try-catch
-            keyboardInput.toShipmentAmount = Integer.parseInt(warehouseShipmentAmount.getText());
+
+        try {
+            if(warehouseShipmentAmount.getText().equals("amount") == false)
+                keyboardInput.toShipmentAmount = Integer.parseInt(warehouseShipmentAmount.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("You need to enter amount of books (number) to make shipment");
+        }
+
+
         return keyboardInput;
     }
 }

@@ -137,12 +137,28 @@ public class AddingBookWindow {
     {
         KeyboardInput ki = new KeyboardInput();
         ki.title = titleTextField.getText();
+        if(ki.title.isEmpty())
+            ki.title = null;
         ki.subtitle = subtitleTextField.getText();
-        ki.price = Double.parseDouble(priceTextField.getText());
+        if(ki.subtitle.isEmpty())
+            ki.subtitle = null;
+        try {
+            ki.price = Double.parseDouble(priceTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Invalid argument: price must be a number");
+            ki.price = -1;
+        }
         ki.author = authorTextField.getText();
+        if(ki.author.isEmpty())
+            ki.author = null;
         ki.description = descriptionTextField.getText();
+        if(ki.description.isEmpty())
+            ki.description = null;
         ki.book_type = book_types[book_typesComboBox.getSelectedIndex()];
         ki.ISBN = ISBNTextField.getText();
+        if(ki.ISBN.isEmpty())
+            ki.ISBN = null;
         ki.languageID = languageComboBox.getSelectedIndex() + 1;
 
         return ki;

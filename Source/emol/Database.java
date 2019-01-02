@@ -37,17 +37,20 @@ public class Database {
             resultSet.next();
             user.ID = resultSet.getInt("id");
             user.type = resultSet.getString("name");
-
-            String query2 = "SELECT publisher.id FROM publisher JOIN user ON user.id = publisher.user_id"+
-                    " WHERE publisher.user_id="+user.ID;
-            ResultSet resultSet2 = statement.executeQuery(query2);
-            resultSet2.next();
-            user.publisherID = Integer.parseInt(resultSet2.getString("id"));
-
+            user.username = username;
+            user.password = password;
+            if(user.type.equals("Publisher"))
+            {
+                String query2 = "SELECT publisher.id FROM publisher JOIN user ON user.id = publisher.user_id"+
+                        " WHERE publisher.user_id="+user.ID;
+                ResultSet resultSet2 = statement.executeQuery(query2);
+                resultSet2.next();
+                user.publisherID = Integer.parseInt(resultSet2.getString("id"));
+            }
+            return user;
         }
-        catch (SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        catch (SQLException e) { System.out.println("ERROR: "+e.getMessage()); return null; }
 
-        return user;
     }
 
     //Customer-------------------------------------------------------------------------------------

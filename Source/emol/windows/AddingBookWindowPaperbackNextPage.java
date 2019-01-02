@@ -77,7 +77,13 @@ public class AddingBookWindowPaperbackNextPage {
     public KeyboardInput getInput()
     {
         KeyboardInput ki = new KeyboardInput();
-        ki.pagesPaperback = Integer.parseInt(pagesTextField.getText());
+        try {
+            ki.pagesPaperback = Integer.parseInt(pagesTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Invalid argument: pages must be a number");
+            ki.pagesPaperback = -1;
+        }
 
         return ki;
     }

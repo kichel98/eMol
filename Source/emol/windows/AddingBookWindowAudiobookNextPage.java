@@ -94,9 +94,23 @@ public class AddingBookWindowAudiobookNextPage {
     public KeyboardInput getInput()
     {
         KeyboardInput ki = new KeyboardInput();
-        ki.length = Double.parseDouble(lengthTextField.getText());
+        try {
+            ki.length = Double.parseDouble(lengthTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Invalid argument: length must be a number");
+            ki.length = -1;
+        }
         ki.narrator = narratorTextField.getText();
-        ki.fileSizeAudiobook = Integer.parseInt(filesizeTextField.getText());
+        if(ki.narrator.isEmpty())
+            ki.narrator = null;
+        try {
+            ki.fileSizeAudiobook = Integer.parseInt(filesizeTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Invalid argument: file size must be a number");
+            ki.fileSizeAudiobook = -1;
+        }
 
         return ki;
     }

@@ -6,7 +6,12 @@ import emol.windows.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class eMol {
@@ -63,18 +68,17 @@ public class eMol {
                 KeyboardInput keyboardInput = loginWindow.getInput();
 
                 //Do debugowania - żeby szybciej logowanie szło
-                //user = database.connect(keyboardInput.username, keyboardInput.password);
-                user = database.connect("publisher", "1234");
+                user = database.connect(keyboardInput.username, keyboardInput.password);
+                //user = database.connect("publisher", "1234");
                 //user = database.connect("customer", "1234");
                 //user = database.connect("support", "1234");
-
-                if(user.type.equals("Customer")) presentBooksWindow.display();
-                else if(user.type.equals("Publisher")) {
+                if(user != null && user.type.equals("Customer")) presentBooksWindow.display();
+                else if(user != null && user.type.equals("Publisher")) {
                     publisherMainWindow.royalty = database.DownloadRoyalty(user.publisherID);
                     publisherMainWindow.books = database.downloadPublishersBooks(user.publisherID);
                     publisherMainWindow.display();
                 }
-                else if(user.type.equals("Support")) supportMainWindow.display();
+                else if(user != null && user.type.equals("Support")) supportMainWindow.display();
 
             } else if (command.equals( "Logout" )) {
                 System.out.println("Logging out of the system...");
@@ -129,10 +133,16 @@ public class eMol {
                 addingBookWindow.display();
 
             } else if( command.equals( "Next Page" ) )  {
-                KeyboardInput ki = addingBookWindow.getInput();
-                if(ki.book_type.equals("ebook")) addingBookWindowEbookNextPage.display();
-                else if(ki.book_type.equals("paperback")) addingBookWindowPaperbackNextPage.display();
-                else if(ki.book_type.equals("audiobook")) addingBookWindowAudiobookNextPage.display();
+                try {
+                    KeyboardInput ki = addingBookWindow.getInput();
+                    if(ki.book_type.equals("ebook")) addingBookWindowEbookNextPage.display();
+                    else if(ki.book_type.equals("paperback")) addingBookWindowPaperbackNextPage.display();
+                    else if(ki.book_type.equals("audiobook")) addingBookWindowAudiobookNextPage.display();
+                }
+                catch(NumberFormatException ex)
+                {
+                    System.out.println("Price must be a number");
+                }
 
             } else if( command.equals( "Publish" ) )  {
                 KeyboardInput k1 = addingBookWindow.getInput();
@@ -169,12 +179,58 @@ public class eMol {
             } else if( command.equals( "Delete Book" ) ) {
                 KeyboardInput ki = supportMainWindow.getInput();
                 database.deleteBook(ki.toDeleteISBN);
+
             } else if( command.equals( "Delete Review") ) {
                 KeyboardInput ki = supportMainWindow.getInput();
                 database.deleteReview(ki.reviewID);
+
             } else if( command.equals( "Warehouse Shipment") ) {
                 KeyboardInput ki = supportMainWindow.getInput();
                 database.warehouseShipment(ki.toShipmentISBN, ki.toShipmentAmount);
+
+            } else if( command.equals( "Backup" )) {
+                Process process = null;
+                Runtime runtime = Runtime.getRuntime();
+                // it may be a problem if somebody has different path to mysqldump :/
+                String path = "C:/Program Files/MySQL/MySQL Server 8.0/bin/mysqldump.exe";
+                String executeCmd = path + " -u " + user.username + " -p" + user.password + " -h localhost " +
+                        "--add-drop-database --routines --databases eMol -r backup.sql";
+                System.out.println(executeCmd);
+                try {
+                    process = runtime.exec(executeCmd);
+                    int processComplete = process.waitFor();
+                    if(processComplete == 0)
+                        System.out.println("Backup created successfully");
+                    else
+                        System.out.println("Error during creating backup");
+                }
+                catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            } else if( command.equals( "Restore" )) {
+                Process process = null;
+                Runtime runtime = Runtime.getRuntime();
+                String path = "C:/Program Files/MySQL/MySQL Server 8.0/bin/mysql.exe";
+                String[] executeCmd = {path, "--user=" + user.username, "--password=" + user.password,
+                        "-e","source " + "backup.sql"};
+                System.out.println(Arrays.toString(executeCmd));
+                try {
+                    process = runtime.exec(executeCmd);
+                    int processComplete = process.waitFor();
+                    if(processComplete == 0)
+                        System.out.println("Restored successfully");
+                    else
+                        System.out.println("Error during restoring");
+                }
+                catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
             }
             else {
                 System.out.println("Clicked unknown button");

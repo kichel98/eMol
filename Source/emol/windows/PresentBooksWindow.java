@@ -12,12 +12,19 @@ public class PresentBooksWindow {
     private JFrame mainFrame;
     public ArrayList<Book> books = new ArrayList<Book>();
 
+    private JLabel searchLabel = new JLabel("Text");
+    private JLabel ebookLabel = new JLabel("ebook");
+    private JLabel paperbackLabel = new JLabel("paperback");
+    private JLabel audiobookLabel = new JLabel("audiobook");
+    private JLabel priceHigherThanLabel = new JLabel("price >");
+    private JLabel priceLowerThanLabel = new JLabel("price <");
+    private JLabel overSearchButtonLabel = new JLabel();
     private JTextField searchBarTextField = new JTextField();
-    private JTextField ebookTextField = new JTextField("ebook?");
-    private JTextField paperbackTextField = new JTextField("paperback?");
-    private JTextField audiobookTextField = new JTextField("audiobook?");
-    private JTextField priceLowerThanTextField = new JTextField("price<");
-    private JTextField priceHigherThanTextField = new JTextField("price>");
+    private JCheckBox ebookCheckBox = new JCheckBox("", true);
+    private JCheckBox paperbackCheckBox = new JCheckBox("", true);
+    private JCheckBox audiobookCheckBox = new JCheckBox("", true);
+    private JTextField priceHigherThanTextField = new JTextField("0");
+    private JTextField priceLowerThanTextField = new JTextField("1000");
 
     public PresentBooksWindow(ActionListener actionListener, JFrame frame)
     {
@@ -36,6 +43,27 @@ public class PresentBooksWindow {
             System.out.println("ISBN: "+books.get(i).isbn+ " Title: "+books.get(i).title);
         }
 
+        //Creating the label bar
+        JPanel labelPanel = new JPanel(new GridLayout(1, 7));
+        labelPanel.setBounds(0, 0, 500, 50);
+        labelPanel.setPreferredSize(new Dimension(700, 50));
+        labelPanel.setBackground(Color.BLACK);
+
+        searchLabel.setForeground(Color.WHITE);
+        ebookLabel.setForeground(Color.WHITE);
+        paperbackLabel.setForeground(Color.WHITE);
+        audiobookLabel.setForeground(Color.WHITE);
+        priceLowerThanLabel.setForeground(Color.WHITE);
+        priceHigherThanLabel.setForeground(Color.WHITE);
+
+        labelPanel.add(searchLabel);
+        labelPanel.add(ebookLabel);
+        labelPanel.add(paperbackLabel);
+        labelPanel.add(audiobookLabel);
+        labelPanel.add(priceHigherThanLabel);
+        labelPanel.add(priceLowerThanLabel);
+        labelPanel.add(overSearchButtonLabel);
+
         //Creating the search bar
         JPanel searchBarPanel = new JPanel(new GridLayout(1, 7, 0, 1));
         searchBarPanel.setBounds(0,0,500 ,50);
@@ -48,20 +76,20 @@ public class PresentBooksWindow {
         searchBTN.setForeground(Color.white);
 
         searchBarPanel.add(searchBarTextField);
-        searchBarPanel.add(ebookTextField);
-        searchBarPanel.add(paperbackTextField);
-        searchBarPanel.add(audiobookTextField);
+        searchBarPanel.add(ebookCheckBox);
+        searchBarPanel.add(paperbackCheckBox);
+        searchBarPanel.add(audiobookCheckBox);
         searchBarPanel.add(priceHigherThanTextField);
         searchBarPanel.add(priceLowerThanTextField);
         searchBarPanel.add(searchBTN);
 
         //Creating the Center Panel
-        JPanel panel = new JPanel(new GridLayout(11, 1, 20, 1));
+        JPanel panel = new JPanel(new GridLayout(13, 1, 20, 1));
         panel.setBounds(0,0,500 ,800);
         panel.setPreferredSize(new Dimension(700, 750));
         panel.setBackground(Color.DARK_GRAY);
 
-
+        panel.add(labelPanel);
         panel.add(searchBarPanel);
 
         for(int i=0; i<books.size(); i++)
@@ -98,9 +126,9 @@ public class PresentBooksWindow {
     {
         KeyboardInput keyboardInput = new KeyboardInput();
         keyboardInput.keyword = searchBarTextField.getText();
-        if( ebookTextField.getText().equals("1")) keyboardInput.ebook = true;
-        if( paperbackTextField.getText().equals("1")) keyboardInput.paperback = true;
-        if( audiobookTextField.getText().equals("1")) keyboardInput.audiobook = true;
+        if( ebookCheckBox.isSelected()) keyboardInput.ebook = true;
+        if( paperbackCheckBox.isSelected()) keyboardInput.paperback = true;
+        if( audiobookCheckBox.isSelected()) keyboardInput.audiobook = true;
         keyboardInput.priceHigherThan = Integer.parseInt(priceHigherThanTextField.getText());
         keyboardInput.priceLowerThan = Integer.parseInt(priceLowerThanTextField.getText());
         return keyboardInput;

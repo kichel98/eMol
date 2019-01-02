@@ -86,8 +86,20 @@ public class AddingBookWindowEbookNextPage {
     public KeyboardInput getInput()
     {
         KeyboardInput ki = new KeyboardInput();
-        ki.pagesEbook = Integer.parseInt(pagesTextField.getText());
-        ki.fileSizeEbook = Integer.parseInt(filesizeTextField.getText());
+        try {
+            ki.pagesEbook = Integer.parseInt(pagesTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Illegal argument: number of pages");
+            ki.pagesEbook = -1;
+        }
+        try {
+            ki.fileSizeEbook = Integer.parseInt(filesizeTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Illegal argument: number of pages");
+            ki.fileSizeEbook = -1;
+        }
 
         return ki;
     }

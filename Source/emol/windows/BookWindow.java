@@ -169,7 +169,15 @@ public class BookWindow {
         KeyboardInput ki = new KeyboardInput();
         if(!reviewTextField.getText().isEmpty())
             ki.review = new Review((int) ratingComboBox.getSelectedItem(), reviewTextField.getText());
-        if(!amountTextField.getText().isEmpty()) ki.amount = Integer.parseInt(amountTextField.getText());
+        else
+            ki.review = new Review((int) ratingComboBox.getSelectedItem(), null);
+        try {
+            ki.amount = Integer.parseInt(amountTextField.getText());
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Invalid argument: amount must be a number");
+            ki.amount = -1;
+        }
         return ki;
     }
 }

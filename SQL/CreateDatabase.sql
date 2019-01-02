@@ -47,16 +47,16 @@ FOREIGN KEY(user_type_id) REFERENCES user_type(id)
 
 CREATE TABLE book(
 id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-isbn VARCHAR(60) UNIQUE,
-title VARCHAR(70),
+isbn VARCHAR(60) UNIQUE NOT NULL,
+title VARCHAR(70) NOT NULL,
 subtitle VARCHAR(70),
 description VARCHAR(80),
 author VARCHAR(60),
-price DOUBLE,
+price DOUBLE NOT NULL,
 publisher_id INT UNSIGNED,
-date DATE,
+date DATE NOT NULL,
 type INT UNSIGNED NOT NULL,
-language_id INT UNSIGNED,
+language_id INT UNSIGNED NOT NULL,
 PRIMARY KEY(id),
 FOREIGN KEY(publisher_id) REFERENCES publisher(id),
 FOREIGN KEY(language_id) REFERENCES language(id),
@@ -65,23 +65,23 @@ FOREIGN KEY(type) REFERENCES book_type(id)
 
 CREATE TABLE paperback(
 book_id INT UNSIGNED NOT NULL,
-pages INT,
+pages INT NOT NULL,
 PRIMARY KEY(book_id),
 FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ebook(
 book_id INT UNSIGNED NOT NULL,
-pages INT,
-file_size INT,
+pages INT NOT NULL,
+file_size INT NOT NULL,
 PRIMARY KEY(book_id),
 FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
 );
 
 CREATE TABLE audiobook(
 book_id INT UNSIGNED NOT NULL,
-length DOUBLE,
-file_size INT,
+length DOUBLE NOT NULL,
+file_size INT NOT NULL,
 narrator VARCHAR(90),
 PRIMARY KEY(book_id),
 FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
@@ -90,7 +90,7 @@ FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
 CREATE TABLE review(
 id INT UNSIGNED AUTO_INCREMENT NOT NULL,
 book_id INT UNSIGNED,
-rating INT,
+rating INT NOT NULL,
 description VARCHAR(90),
 PRIMARY KEY(id),
 FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE
@@ -113,7 +113,7 @@ FOREIGN KEY(user_id) REFERENCES user(id)
 CREATE TABLE sale(
 id INT UNSIGNED AUTO_INCREMENT NOT NULL,
 book_id INT UNSIGNED NOT NULL,
-quantity INT,
+quantity INT NOT NULL,
 customer_id INT UNSIGNED,
 time TIMESTAMP,
 PRIMARY KEY(id),
