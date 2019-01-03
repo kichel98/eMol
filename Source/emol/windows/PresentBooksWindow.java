@@ -12,6 +12,11 @@ public class PresentBooksWindow {
     private JFrame mainFrame;
     public ArrayList<Book> books = new ArrayList<Book>();
 
+    private ButtonGroup buttonGroup;
+    private JRadioButton sortingByPriceASCButton = new JRadioButton("price ↑");
+    private JRadioButton sortingByPriceDESCButton = new JRadioButton("price ↓");
+    private JRadioButton sortingByTitleASCButton = new JRadioButton("title ↑");
+    private JRadioButton sortingByTitleDESCButton = new JRadioButton("title ↓");
     private JLabel searchLabel = new JLabel("Text");
     private JLabel ebookLabel = new JLabel("ebook");
     private JLabel paperbackLabel = new JLabel("paperback");
@@ -42,6 +47,32 @@ public class PresentBooksWindow {
         {
             System.out.println("ISBN: "+books.get(i).isbn+ " Title: "+books.get(i).title);
         }
+
+        //Creating the sorting bar
+        JPanel sortingPanel = new JPanel(new GridLayout(1, 5));
+        sortingPanel.setBounds(0, 0, 500, 50);
+        sortingPanel.setPreferredSize(new Dimension(700, 50));
+        sortingPanel.setBackground(Color.BLACK);
+
+        JLabel sortingLabel = new JLabel("Sort by: ");
+        sortingLabel.setForeground(Color.WHITE);
+
+        sortingByPriceASCButton.setActionCommand(sortingByPriceASCButton.getText());
+        sortingByPriceDESCButton.setActionCommand(sortingByPriceDESCButton.getText());
+        sortingByTitleASCButton.setActionCommand(sortingByTitleASCButton.getText());
+        sortingByTitleDESCButton.setActionCommand(sortingByTitleDESCButton.getText());
+
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(sortingByPriceASCButton);
+        buttonGroup.add(sortingByPriceDESCButton);
+        buttonGroup.add(sortingByTitleASCButton);
+        buttonGroup.add(sortingByTitleDESCButton);
+
+        sortingPanel.add(sortingLabel);
+        sortingPanel.add(sortingByPriceASCButton);
+        sortingPanel.add(sortingByPriceDESCButton);
+        sortingPanel.add(sortingByTitleASCButton);
+        sortingPanel.add(sortingByTitleDESCButton);
 
         //Creating the label bar
         JPanel labelPanel = new JPanel(new GridLayout(1, 7));
@@ -84,11 +115,12 @@ public class PresentBooksWindow {
         searchBarPanel.add(searchBTN);
 
         //Creating the Center Panel
-        JPanel panel = new JPanel(new GridLayout(13, 1, 20, 1));
+        JPanel panel = new JPanel(new GridLayout(14, 1, 20, 1));
         panel.setBounds(0,0,500 ,800);
         panel.setPreferredSize(new Dimension(700, 750));
         panel.setBackground(Color.DARK_GRAY);
 
+        panel.add(sortingPanel);
         panel.add(labelPanel);
         panel.add(searchBarPanel);
 
@@ -131,6 +163,8 @@ public class PresentBooksWindow {
         if( audiobookCheckBox.isSelected()) keyboardInput.audiobook = true;
         keyboardInput.priceHigherThan = Integer.parseInt(priceHigherThanTextField.getText());
         keyboardInput.priceLowerThan = Integer.parseInt(priceLowerThanTextField.getText());
+        if(buttonGroup.getSelection() != null)
+            keyboardInput.sortingBy = buttonGroup.getSelection().getActionCommand();
         return keyboardInput;
     }
 }

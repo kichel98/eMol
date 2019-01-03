@@ -44,6 +44,78 @@ public class BookWindow {
         subtitleLabel.setOpaque(true);
         subtitleLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        JLabel descriptionLabel = new JLabel(book.description);
+        descriptionLabel.setBackground(Color.BLACK);
+        descriptionLabel.setForeground(Color.white);
+        descriptionLabel.setOpaque(true);
+        descriptionLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel authorLabel = new JLabel("Author: " + book.author);
+        authorLabel.setBackground(Color.BLACK);
+        authorLabel.setForeground(Color.white);
+        authorLabel.setOpaque(true);
+        authorLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel dateLabel = new JLabel("Date: " + book.date);
+        dateLabel.setBackground(Color.BLACK);
+        dateLabel.setForeground(Color.white);
+        dateLabel.setOpaque(true);
+        dateLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel languageLabel = new JLabel("Language: " + book.language);
+        languageLabel.setBackground(Color.BLACK);
+        languageLabel.setForeground(Color.white);
+        languageLabel.setOpaque(true);
+        languageLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel pagesEbookLabel = null;
+        JLabel fileSizeEbookLabel = null;
+        JLabel pagesPaperbackLabel = null;
+        JLabel lengthAudiobookLabel = null;
+        JLabel fileSizeAudiobookLabel = null;
+        JLabel narratorAudiobookLabel = null;
+
+        if(book.type.equals("ebook")) {
+            pagesEbookLabel = new JLabel("Pages: " + Integer.toString(book.pagesEbook));
+            pagesEbookLabel.setBackground(Color.BLACK);
+            pagesEbookLabel.setForeground(Color.white);
+            pagesEbookLabel.setOpaque(true);
+            pagesEbookLabel.setHorizontalAlignment(JLabel.CENTER);
+
+            fileSizeEbookLabel = new JLabel("File size: " + Integer.toString(book.fileSizeEbook));
+            fileSizeEbookLabel.setBackground(Color.BLACK);
+            fileSizeEbookLabel.setForeground(Color.white);
+            fileSizeEbookLabel.setOpaque(true);
+            fileSizeEbookLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        } else if(book.type.equals("paperback")) {
+            pagesPaperbackLabel = new JLabel("Pages: " + Integer.toString(book.pagesPaperback));
+            pagesPaperbackLabel.setBackground(Color.BLACK);
+            pagesPaperbackLabel.setForeground(Color.white);
+            pagesPaperbackLabel.setOpaque(true);
+            pagesPaperbackLabel.setHorizontalAlignment(JLabel.CENTER);
+
+
+        } else if(book.type.equals("audiobook")) {
+            lengthAudiobookLabel = new JLabel("Length: " + Double.toString(book.lengthAudiobook));
+            lengthAudiobookLabel.setBackground(Color.BLACK);
+            lengthAudiobookLabel.setForeground(Color.white);
+            lengthAudiobookLabel.setOpaque(true);
+            lengthAudiobookLabel.setHorizontalAlignment(JLabel.CENTER);
+
+            fileSizeAudiobookLabel = new JLabel("File size: " + Integer.toString(book.fileSizeAudiobook));
+            fileSizeAudiobookLabel.setBackground(Color.BLACK);
+            fileSizeAudiobookLabel.setForeground(Color.white);
+            fileSizeAudiobookLabel.setOpaque(true);
+            fileSizeAudiobookLabel.setHorizontalAlignment(JLabel.CENTER);
+
+            narratorAudiobookLabel = new JLabel("Narrator: " + book.narratorAudiobook);
+            narratorAudiobookLabel.setBackground(Color.BLACK);
+            narratorAudiobookLabel.setForeground(Color.white);
+            narratorAudiobookLabel.setOpaque(true);
+            narratorAudiobookLabel.setHorizontalAlignment(JLabel.CENTER);
+        }
+
         JLabel amountLabel = new JLabel("Amount");
         amountLabel.setBackground(Color.BLACK);
         amountLabel.setForeground(Color.white);
@@ -74,12 +146,28 @@ public class BookWindow {
         leaveReviewPanel.setBackground(Color.DARK_GRAY);
 
         //Creating the Center Panel
-        JPanel bookDetailsPanel = new JPanel(new GridLayout(12, 1, 20, 1));
+        JPanel bookDetailsPanel = new JPanel(new GridLayout(13, 1, 20, 1));
         bookDetailsPanel.setPreferredSize(new Dimension(500, 750));
         bookDetailsPanel.setBackground(Color.DARK_GRAY);
 
         bookDetailsPanel.add(titleLabel);
         bookDetailsPanel.add(subtitleLabel);
+        bookDetailsPanel.add(descriptionLabel);
+        bookDetailsPanel.add(authorLabel);
+        bookDetailsPanel.add(dateLabel);
+        bookDetailsPanel.add(languageLabel);
+        if(book.type.equals("ebook")) {
+            bookDetailsPanel.add(pagesEbookLabel);
+            bookDetailsPanel.add(fileSizeEbookLabel);
+
+        } else if(book.type.equals("paperback")) {
+            bookDetailsPanel.add(pagesPaperbackLabel);
+
+        } else if(book.type.equals("audiobook")) {
+            bookDetailsPanel.add(lengthAudiobookLabel);
+            bookDetailsPanel.add(fileSizeAudiobookLabel);
+            bookDetailsPanel.add(narratorAudiobookLabel);
+        }
         bookDetailsPanel.add(amountLabel);
         bookDetailsPanel.add(amountTextField);
         bookDetailsPanel.add(buyBTN);
@@ -123,12 +211,12 @@ public class BookWindow {
         leaveReviewPanel.add(ratingLabel);
         leaveReviewPanel.add(ratingComboBox);
 
-        JLabel descriptionLabel = new JLabel("Description");
-        descriptionLabel.setBackground(Color.BLACK);
-        descriptionLabel.setForeground(Color.white);
-        descriptionLabel.setOpaque(true);
-        descriptionLabel.setHorizontalAlignment(JLabel.CENTER);
-        leaveReviewPanel.add(descriptionLabel);
+        JLabel descriptionReviewLabel = new JLabel("Description");
+        descriptionReviewLabel.setBackground(Color.BLACK);
+        descriptionReviewLabel.setForeground(Color.white);
+        descriptionReviewLabel.setOpaque(true);
+        descriptionReviewLabel.setHorizontalAlignment(JLabel.CENTER);
+        leaveReviewPanel.add(descriptionReviewLabel);
         leaveReviewPanel.add(reviewTextField);
 
         JButton leaveReviewBTN = new JButton("Leave a Review");

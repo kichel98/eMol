@@ -56,7 +56,7 @@ public class Database {
     //Customer-------------------------------------------------------------------------------------
     //Done
     public ArrayList<Book> downloadBooks(String keyword, boolean eBook, boolean pBack, boolean aBook,
-                                         int priceHigherThan, int priceLowerThan, SortType sortType, int page)
+                                         int priceHigherThan, int priceLowerThan, SortType sortType, String sortBy, int page)
     {
         int amountOfTypes = 0;
         if(!eBook && !pBack && aBook) amountOfTypes=1;
@@ -67,7 +67,28 @@ public class Database {
         if(!eBook && pBack && aBook) amountOfTypes=2;
         if(eBook && pBack && aBook) amountOfTypes=3;
 
-        String query = "SELECT book.id, title, subtitle, isbn, price, book_type.name FROM book ";
+        String query = "SELECT book.id, title, subtitle, isbn, price, book_type.name, description, author," +
+                " date, language.name,";
+        if(amountOfTypes == 3)
+            query += " ebook.pages, ebook.file_size, paperback.pages, audiobook.length," +
+                    " audiobook.file_size, audiobook.narrator";
+        else if(amountOfTypes == 2) {
+            if(eBook && pBack)
+                query += " ebook.pages, ebook.file_size, paperback.pages";
+            else if(eBook && aBook)
+                query += " ebook.pages, ebook.file_size, audiobook.length, audiobook.file_size, audiobook.narrator";
+            else if(pBack && aBook)
+                query += " paperback.pages, audiobook.length, audiobook.file_size, audiobook.narrator";
+        }
+        else if(amountOfTypes == 1) {
+            if(eBook)
+                query += " ebook.pages, ebook.file_size";
+            else if(pBack)
+                query += " paperback.pages";
+            else if(aBook)
+                query += " audiobook.length, audiobook.file_size, audiobook.narrator";
+        }
+        query += " FROM book JOIN language ON book.language_id = language.id ";
         if(eBook) query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
         if(pBack) query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         if(aBook) query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
@@ -94,9 +115,14 @@ public class Database {
 
         query+= " AND ";
         query+= "price>"+priceHigherThan + " AND price<" + priceLowerThan + " ";
-        query+= "ORDER BY price " + sortType.toString()+" ";
+        if(sortBy != null && sortType != null)
+            query += "ORDER BY " + sortBy + " " + sortType.toString()+" ";
         query+= "LIMIT 10";
 
+        if(amountOfTypes == 0) //dummy query
+            query = "SELECT book.id, title, subtitle, isbn, price, book_type.name, description, author, date, language.name " +
+                    "FROM book JOIN language ON book.language_id = language.id LEFT JOIN book_type ON book.type = book_type.id " +
+                    "WHERE title LIKE '%%' AND price>0 AND price<1000 ORDER BY price ASC LIMIT 0";
         System.out.println("Downloading books...");
         System.out.println("QUERY: "+query);
 
@@ -105,12 +131,30 @@ public class Database {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
             {
-                bookData.add(new Book(resultSet.getString("title"),
+                Book book = new Book(resultSet.getString("title"),
                         resultSet.getString("subtitle"),
                         resultSet.getString("isbn"),
                         resultSet.getDouble("price"),
                         resultSet.getString("name"),
-                        resultSet.getInt("id")));
+                        resultSet.getInt("id"),
+                        resultSet.getString("description"),
+                        resultSet.getString("author"),
+                        resultSet.getString("date"),
+                        resultSet.getString("language.name"));
+
+                if(resultSet.getString("name").equals("ebook"))
+                    book.fillEbook(resultSet.getInt("ebook.pages"),
+                            resultSet.getInt("ebook.file_size"));
+
+                else if(resultSet.getString("name").equals("paperback"))
+                    book.fillPaperback(resultSet.getInt("paperback.pages"));
+
+                else if(resultSet.getString("name").equals("audiobook"))
+                    book.fillAudiobook(resultSet.getDouble("audiobook.length"),
+                            resultSet.getInt("audiobook.file_size"),
+                            resultSet.getString("audiobook.narrator"));
+
+                bookData.add(book);
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
@@ -380,7 +424,8 @@ public class Database {
     //Done
     public ArrayList<Book> downloadPublishersBooks(int publisherID)
     {
-        String query = "SELECT book.id, title, subtitle, isbn, price, book_type.name FROM book ";
+        String query = "SELECT book.id, title, subtitle, isbn, price, book_type.name, description, author," +
+                " date, language.name FROM book JOIN language ON book.language_id = language.id ";
         query += "LEFT JOIN ebook ON ebook.book_id = book.id ";
         query += "LEFT JOIN paperback ON paperback.book_id = book.id ";
         query += "LEFT JOIN audiobook ON audiobook.book_id = book.id ";
@@ -404,7 +449,11 @@ public class Database {
                         resultSet.getString("isbn"),
                         resultSet.getDouble("price"),
                         resultSet.getString("name"),
-                        resultSet.getInt("id")));
+                        resultSet.getInt("id"),
+                        resultSet.getString("description"),
+                        resultSet.getString("author"),
+                        resultSet.getString("date"),
+                        resultSet.getString("language.name")));
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }

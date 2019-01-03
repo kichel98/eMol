@@ -112,9 +112,21 @@ public class eMol {
                 System.out.println("Presenting books...");
                 if(user.type.equals("Customer")) {
                     KeyboardInput keyboardInput = presentBooksWindow.getInput();
+                    SortType sortType = null;
+                    String sortBy = null;
+                    if(keyboardInput.sortingBy != null) {
+                        if(keyboardInput.sortingBy.endsWith("↑"))
+                            sortType = SortType.ASC;
+                        else if(keyboardInput.sortingBy.endsWith("↓"))
+                            sortType = SortType.DESC;
+                        if(keyboardInput.sortingBy.startsWith("price"))
+                            sortBy = "price";
+                        else if(keyboardInput.sortingBy.startsWith("title"))
+                            sortBy = "title";
+                    }
                     presentBooksWindow.books = database.downloadBooks(keyboardInput.keyword,
                             keyboardInput.ebook, keyboardInput.paperback, keyboardInput.audiobook,
-                            keyboardInput.priceHigherThan,  keyboardInput.priceLowerThan, SortType.ASC, 1);
+                            keyboardInput.priceHigherThan,  keyboardInput.priceLowerThan, sortType, sortBy, 1);
                     System.out.println("Number of books: "+presentBooksWindow.books.size());
                     presentBooksWindow.display();
                 }

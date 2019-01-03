@@ -15,6 +15,8 @@ public class KeyboardInput {
     public boolean audiobook;
     public int priceLowerThan;
     public int priceHigherThan;
+    public String sortingBy;
+
 
     //FROM bookWindow
     public Review review;
