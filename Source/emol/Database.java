@@ -12,6 +12,9 @@ public class Database {
     private Connection connection;
     private Statement statement;
 
+    long start_time;
+    long end_time;
+
     //connect and login
     public User connect(String username, String password)
     {
@@ -127,6 +130,7 @@ public class Database {
         System.out.println("QUERY: "+query);
 
         ArrayList<Book> bookData = new ArrayList<Book>();
+        start_time = System.nanoTime();
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -158,6 +162,8 @@ public class Database {
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return bookData;
     }
 
@@ -169,7 +175,7 @@ public class Database {
 
         System.out.println("Downloading book types...");
         System.out.println(query);
-
+        start_time = System.nanoTime();
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -178,6 +184,8 @@ public class Database {
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return bookTypes;
     }
 
@@ -190,7 +198,7 @@ public class Database {
 
         System.out.println("Downloading languages...");
         System.out.println("QUERY: " +query);
-
+        start_time = System.nanoTime();
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -199,6 +207,8 @@ public class Database {
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return languages;
 
     }
@@ -212,7 +222,7 @@ public class Database {
 
         System.out.println("Downloading reviews for a book...");
         System.out.println("QUERY: " + query);
-
+        start_time = System.nanoTime();
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -222,6 +232,8 @@ public class Database {
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return reviews;
 
     }
@@ -235,7 +247,7 @@ public class Database {
         System.out.println(query);
 
         boolean itDoes = false;
-
+        start_time = System.nanoTime();
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -244,11 +256,14 @@ public class Database {
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return itDoes;
     }
 
     //Done
     public void buyBook(Book book, int amount, int userID) {
+        start_time = System.nanoTime();
         try {
             //Assume a valid connection object conn
             connection.setAutoCommit(false);
@@ -294,6 +309,8 @@ public class Database {
                 System.out.println("ERROR: " + e.getMessage());
             }
         }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
     }
 
     //Done
@@ -304,11 +321,13 @@ public class Database {
 
         System.out.println("Uploading a review for a book...");
         System.out.println("QUERY: " + query);
-
+        start_time = System.nanoTime();
         try {
             statement.executeUpdate(query);
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
     }
 
     //Publisher---------------------------------------------------------------------------------
@@ -316,6 +335,7 @@ public class Database {
     public void addEBook(String ISBN, String title, String subTitle, double price, String author,
                          int publisherID, int languageID, String description, int fileSize, int pages)
     {
+        start_time = System.nanoTime();
         try {
             connection.setAutoCommit(false);
             int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 1);
@@ -336,11 +356,14 @@ public class Database {
                 System.out.println("ERROR: " + e.getMessage());
             }
         }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
     }
     //Done
     public void addPBackBook(String ISBN, String title, String subTitle, double price, String author,
                          int publisherID, int languageID, String description, int pages)
     {
+        start_time = System.nanoTime();
         try {
             connection.setAutoCommit(false);
             int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 2);
@@ -361,12 +384,15 @@ public class Database {
                 System.out.println("ERROR: " + e.getMessage());
             }
         }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
     }
     //Done
     public void addABook(String ISBN, String title, String subTitle, double price, String author,
                              int publisherID, int languageID, String description,
                          double length, String narrator, int fileSize)
     {
+        start_time = System.nanoTime();
         try {
             connection.setAutoCommit(false);
             int bookID = addBook(ISBN, title, subTitle, price, author, publisherID, languageID, description, 3);
@@ -387,6 +413,8 @@ public class Database {
                 System.out.println("ERROR: " + e.getMessage());
             }
         }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
 
     }
     private int addBook(String ISBN, String title, String subTitle, double price, String author,
@@ -409,12 +437,17 @@ public class Database {
             throw new SQLException("This ISBN already exists.");
 
         System.out.println("QUERY: " + bookQuery);
+
+        start_time = System.nanoTime();
         statement.executeUpdate(bookQuery);
 
         System.out.println("QUERY: " + bookIdQuery);
         ResultSet resultSet2 = statement.executeQuery(bookIdQuery);
         resultSet2.next();
         bookID = resultSet2.getInt("id");
+
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
 
         System.out.println("A Book has been published");
 
@@ -440,6 +473,7 @@ public class Database {
         System.out.println("QUERY: "+query);
 
         ArrayList<Book> bookData = new ArrayList<Book>();
+        start_time = System.nanoTime();
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -457,6 +491,8 @@ public class Database {
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return bookData;
     }
     //TODO:
@@ -472,7 +508,7 @@ public class Database {
         System.out.println("QUERY: "+query);
 
         double royalty = 0;
-
+        start_time = System.nanoTime();
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -481,6 +517,8 @@ public class Database {
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return royalty;
     }
 
@@ -490,12 +528,14 @@ public class Database {
     {
         String query = "DELETE FROM book WHERE isbn = " + bookID;
         System.out.println("QUERY: " + query);
-
+        start_time = System.nanoTime();
         try {
             statement.executeUpdate(query);
             System.out.println("A book has been deleted");
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
 
     }
     //Done
@@ -503,12 +543,14 @@ public class Database {
     {
         String query = "DELETE FROM review WHERE id = " + reviewID;
         System.out.println("QUERY: " + query);
-
+        start_time = System.nanoTime();
         try {
             statement.executeUpdate(query);
             System.out.println("A review has been deleted");
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
     }
     //dostawa książek
     //Done
@@ -517,12 +559,14 @@ public class Database {
         String query = "UPDATE inventory JOIN book ON inventory.book_id = book.id SET quantity = quantity + " +
                 amount + " WHERE isbn = '" + ISBN + "'";
         System.out.println("QUERY: " + query);
-
+        start_time = System.nanoTime();
         try {
             statement.executeUpdate(query);
             System.out.println("An inventory has been updated");
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
     }
 
 }

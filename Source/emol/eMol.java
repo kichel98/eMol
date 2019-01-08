@@ -72,6 +72,7 @@ public class eMol {
                 //user = database.connect("publisher", "1234");
                 //user = database.connect("customer", "1234");
                 //user = database.connect("support", "1234");
+
                 if(user != null && user.type.equals("Customer")) presentBooksWindow.display();
                 else if(user != null && user.type.equals("Publisher")) {
                     publisherMainWindow.royalty = database.DownloadRoyalty(user.publisherID);
