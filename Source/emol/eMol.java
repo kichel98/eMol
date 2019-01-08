@@ -42,6 +42,8 @@ public class eMol {
         AddingBookWindowPaperbackNextPage addingBookWindowPaperbackNextPage;
         AddingBookWindowAudiobookNextPage addingBookWindowAudiobookNextPage;
 
+        PublisherBookDetailsWindow publisherBookDetailsWindow;
+
         MainWindow(JFrame frame)
         {
             this.frame = frame;
@@ -52,6 +54,9 @@ public class eMol {
             publisherMainWindow = new PublisherMainWindow(this, frame);
             supportMainWindow = new SupportMainWindow(this, frame);
             addingBookWindow = new AddingBookWindow(this, frame);
+
+            publisherBookDetailsWindow = new PublisherBookDetailsWindow(this, frame);
+
 
             addingBookWindowEbookNextPage = new AddingBookWindowEbookNextPage(this, frame);
             addingBookWindowPaperbackNextPage = new AddingBookWindowPaperbackNextPage(this, frame);
@@ -101,8 +106,66 @@ public class eMol {
                 }
                 else if(user.type.equals("Publisher"))
                 {
-                    //TODO: displaying book info for publisher
+                    double royalty = database.downloadBookRoyalties(publisherMainWindow.books.get(i).book_id);
+                    double avgRating = database.downloadAverageRating(publisherMainWindow.books.get(i).book_id);
+
+                    publisherBookDetailsWindow.royalty = royalty;
+                    publisherBookDetailsWindow.avgRating = avgRating;
+                    publisherBookDetailsWindow.book = publisherMainWindow.books.get(i);
+
+                    publisherBookDetailsWindow.display();
                 }
+
+            } else if( command.equals("->") )  {
+                presentBooksWindow.currentPage++;
+
+                System.out.println("Presenting books...");
+                if(user.type.equals("Customer")) {
+                    KeyboardInput keyboardInput = presentBooksWindow.getInput();
+                    SortType sortType = null;
+                    String sortBy = null;
+                    if(keyboardInput.sortingBy != null) {
+                        if(keyboardInput.sortingBy.endsWith("↑"))
+                            sortType = SortType.ASC;
+                        else if(keyboardInput.sortingBy.endsWith("↓"))
+                            sortType = SortType.DESC;
+                        if(keyboardInput.sortingBy.startsWith("price"))
+                            sortBy = "price";
+                        else if(keyboardInput.sortingBy.startsWith("title"))
+                            sortBy = "title";
+                    }
+                    presentBooksWindow.books = database.downloadBooks(keyboardInput.keyword,
+                            keyboardInput.ebook, keyboardInput.paperback, keyboardInput.audiobook,
+                            keyboardInput.priceHigherThan,  keyboardInput.priceLowerThan, sortType, sortBy, presentBooksWindow.currentPage);
+                    System.out.println("Number of books: "+presentBooksWindow.books.size());
+                    presentBooksWindow.display();
+                }
+
+            } else if( command.equals("<-") )  {
+                if(presentBooksWindow.currentPage>1) presentBooksWindow.currentPage--;
+
+                System.out.println("Presenting books...");
+                if(user.type.equals("Customer")) {
+                    KeyboardInput keyboardInput = presentBooksWindow.getInput();
+                    SortType sortType = null;
+                    String sortBy = null;
+                    if(keyboardInput.sortingBy != null) {
+                        if(keyboardInput.sortingBy.endsWith("↑"))
+                            sortType = SortType.ASC;
+                        else if(keyboardInput.sortingBy.endsWith("↓"))
+                            sortType = SortType.DESC;
+                        if(keyboardInput.sortingBy.startsWith("price"))
+                            sortBy = "price";
+                        else if(keyboardInput.sortingBy.startsWith("title"))
+                            sortBy = "title";
+                    }
+                    presentBooksWindow.books = database.downloadBooks(keyboardInput.keyword,
+                            keyboardInput.ebook, keyboardInput.paperback, keyboardInput.audiobook,
+                            keyboardInput.priceHigherThan,  keyboardInput.priceLowerThan, sortType, sortBy, presentBooksWindow.currentPage);
+                    System.out.println("Number of books: "+presentBooksWindow.books.size());
+                    presentBooksWindow.display();
+                }
+
 
             } else if( command.equals("Buy") )  {
                 Book book = bookWindow.book;

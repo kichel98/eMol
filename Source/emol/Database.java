@@ -120,7 +120,7 @@ public class Database {
         query+= "price>"+priceHigherThan + " AND price<" + priceLowerThan + " ";
         if(sortBy != null && sortType != null)
             query += "ORDER BY " + sortBy + " " + sortType.toString()+" ";
-        query+= "LIMIT 10";
+        query+= "LIMIT "+page*10;
 
         if(amountOfTypes == 0) //dummy query
             query = "SELECT book.id, title, subtitle, isbn, price, book_type.name, description, author, date, language.name " +
@@ -131,6 +131,8 @@ public class Database {
 
         ArrayList<Book> bookData = new ArrayList<Book>();
         start_time = System.nanoTime();
+
+        int counter = 1;
         try {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next())
@@ -158,7 +160,8 @@ public class Database {
                             resultSet.getInt("audiobook.file_size"),
                             resultSet.getString("audiobook.narrator"));
 
-                bookData.add(book);
+                if(counter>page*10-10) bookData.add(book);
+                counter++;
             }
         }
         catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
@@ -495,11 +498,7 @@ public class Database {
         System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return bookData;
     }
-    //TODO:
-    public void downloadSales(int bookID)
-    {
 
-    }
     public double DownloadRoyalty(int publisherID)
     {
         String query = "SELECT royalty FROM publisher WHERE id="+publisherID;
@@ -520,6 +519,52 @@ public class Database {
         end_time = System.nanoTime();
         System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
         return royalty;
+    }
+
+    public double downloadBookRoyalties(int bookID)
+    {
+        String query = "SELECT SUM(quantity*price) AS sm FROM sale JOIN book ON sale.book_id = book.id WHERE book.id=" +
+                bookID;
+
+        System.out.println("Downloading book royalties...");
+        System.out.println("QUERY: "+query);
+
+        double royalty = 0;
+        start_time = System.nanoTime();
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next())
+            {
+                royalty = resultSet.getDouble("sm");
+            }
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
+        return royalty;
+    }
+
+    public double downloadAverageRating(int bookID)
+    {
+        String query = "SELECT AVG(rating) AS rt FROM review WHERE book_id=" +
+                bookID;
+
+        System.out.println("Downloading book average rating..");
+        System.out.println("QUERY: "+query);
+
+        double avgRating = 0;
+        start_time = System.nanoTime();
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next())
+            {
+                avgRating = resultSet.getDouble("rt");
+            }
+        }
+        catch(SQLException e) { System.out.println("ERROR: "+e.getMessage()); }
+        end_time = System.nanoTime();
+        System.out.println("Elapsed time: "+(end_time-start_time)/1000000+"ms");
+        return avgRating;
     }
 
     //Support------------------------------------------------------------------------------------

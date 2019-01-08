@@ -11,6 +11,7 @@ public class PresentBooksWindow {
     private ActionListener actionListener;
     private JFrame mainFrame;
     public ArrayList<Book> books = new ArrayList<Book>();
+    public int currentPage = 1;
 
     private ButtonGroup buttonGroup;
     private JRadioButton sortingByPriceASCButton = new JRadioButton("price ↑");
@@ -115,7 +116,7 @@ public class PresentBooksWindow {
         searchBarPanel.add(searchBTN);
 
         //Creating the Center Panel
-        JPanel panel = new JPanel(new GridLayout(14, 1, 20, 1));
+        JPanel panel = new JPanel(new GridLayout(16, 1, 20, 1));
         panel.setBounds(0,0,500 ,800);
         panel.setPreferredSize(new Dimension(700, 750));
         panel.setBackground(Color.DARK_GRAY);
@@ -133,6 +134,18 @@ public class PresentBooksWindow {
             bookBTN.setForeground(Color.white);
             panel.add(bookBTN);
         }
+
+        JButton nextPageBTN = new JButton("->");
+        nextPageBTN.addActionListener(actionListener);
+        nextPageBTN.setBackground(Color.BLACK);
+        nextPageBTN.setForeground(Color.white);
+        panel.add(nextPageBTN);
+
+        JButton previousPageBTN = new JButton("<-");
+        previousPageBTN.addActionListener(actionListener);
+        previousPageBTN.setBackground(Color.BLACK);
+        previousPageBTN.setForeground(Color.white);
+        panel.add(previousPageBTN);
 
         JButton backBTN = new JButton("Logout");
         backBTN.addActionListener(actionListener);
