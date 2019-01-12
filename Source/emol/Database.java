@@ -11,6 +11,7 @@ import java.util.Date;
 public class Database {
     private Connection connection;
     private Statement statement;
+    private PreparedStatement pStatement;
 
     long start_time;
     long end_time;
@@ -25,7 +26,7 @@ public class Database {
         String timezone = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
         String query = "SELECT user.id, user_type.name FROM user JOIN user_type " +
-                "ON user.user_type_id=user_type.id WHERE username='"+username+"' AND password='"+password+"'";
+                "ON user.user_type_id=user_type.id WHERE username = ? AND password = ?";
 
 
 
@@ -36,7 +37,10 @@ public class Database {
             connection = DriverManager.getConnection("jdbc:mysql://" + IP + ":" + port + "/" + databaseName+timezone,
                     username, password);
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            pStatement = connection.prepareStatement(query);
+            pStatement.setString(1, username);
+            pStatement.setString(2, password);
+            ResultSet resultSet = pStatement.executeQuery();
             resultSet.next();
             user.ID = resultSet.getInt("id");
             user.type = resultSet.getString("name");
